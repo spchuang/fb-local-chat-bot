@@ -28,7 +28,7 @@ class Bot extends EventEmitter {
     this._init = false;
   }
 
-  initBot(token: string, verfyToken: string, useLocalChat: boolean): void {
+  init(token: string, verfyToken: string, useLocalChat: boolean): void {
     this._token = token;
     this._verifyToken = verfyToken;
     this._useLocalChat = useLocalChat;

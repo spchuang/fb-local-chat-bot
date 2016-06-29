@@ -1,0 +1,1 @@
+require('./localChat/LocalChatContainer.jsx');

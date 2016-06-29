@@ -10,7 +10,7 @@ const FBLocalChatRoutes = (router: Object) => {
     //res.json(MessengerUtils.getLocalChatMessages());
   });
 
-  router.post('/localChat/sendMessage', async (req, res) => {
+  router.post('/localChat/sendMessage', (req, res) => {
     const senderID = req.body.senderID;
     const message = req.body.message;
     invariant(senderID && message, 'both senderID and message are required');
@@ -19,7 +19,7 @@ const FBLocalChatRoutes = (router: Object) => {
     res.sendStatus(200);
   });
 
-  router.post('/localChat/postback/', async (req, res) => {
+  router.post('/localChat/postback/', (req, res) => {
     const senderID = req.body.senderID;
     const payload = req.body.payload;
 
@@ -29,6 +29,7 @@ const FBLocalChatRoutes = (router: Object) => {
   });
 
   router.get('/localChat/*', (req, res) => {
+    console.log("HI");
     var filePath = req.url;
     if (filePath === '') {
       filePath = 'intern/index.html';
