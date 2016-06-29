@@ -1,0 +1,13 @@
+{
+  "presets": ["es2015"],
+  "plugins": [
+    "transform-flow-strip-types",
+    "syntax-trailing-function-commas",
+    "transform-class-properties",
+    "syntax-async-functions",
+    ["transform-async-to-module-method", {
+      "module": "bluebird",
+      "method": "coroutine"
+     }]
+  ],
+}
