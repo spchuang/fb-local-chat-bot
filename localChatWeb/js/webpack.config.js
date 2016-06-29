@@ -5,6 +5,7 @@ module.exports = {
   entry: __dirname + '/main.js',
   output: { path: __dirname, filename: 'dist/bundle.js' },
   devtool: 'source-map',
+  debug: true,
   module: {
     loaders: [
       {
@@ -27,7 +28,7 @@ module.exports = {
     new webpack.OldWatchingPlugin()
   ],
   node: {
-    console: 'empty',
+    console: true,
     fs: 'empty',
     net: 'empty',
     tls: 'empty'

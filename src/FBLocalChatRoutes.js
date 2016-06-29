@@ -2,12 +2,13 @@
 
 'use strict';
 
+import ChatUtils from './ChatUtils';
 import {Router} from 'express';;
 import invariant from 'invariant';
 
-const FBLocalChatRoutes = (router: Object) => {
+const FBLocalChatRoutes = (router: Router): Router => {
   router.get('/localChat/getMessages', (req, res) => {
-    //res.json(MessengerUtils.getLocalChatMessages());
+    res.json(ChatUtils.getLocalChatMessages());
   });
 
   router.post('/localChat/sendMessage', (req, res) => {
@@ -29,12 +30,11 @@ const FBLocalChatRoutes = (router: Object) => {
   });
 
   router.get('/localChat/*', (req, res) => {
-    console.log("HI");
-    var filePath = req.url;
-    if (filePath === '') {
-      filePath = 'intern/index.html';
+    var filePath = req.url.replace('/localChat', '');
+    if (filePath === '/') {
+      filePath = 'index.html';
     }
-    res.sendFile(filePath, {root: './public'});
+    res.sendFile(filePath, {root: './localChatWeb'});
   });
 
   return router;

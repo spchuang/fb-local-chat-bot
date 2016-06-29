@@ -13,13 +13,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use('/chat', Bot.router());
 
-app._router.stack.forEach(function(r){
-  if (r.route && r.route.path){
-    console.log(r.route.path)
-  }
-})
+app.use('/chat', Bot.router());
 
 var server = app.listen(5000, () => {
   console.log('Listening on port %s...', server.address().port);

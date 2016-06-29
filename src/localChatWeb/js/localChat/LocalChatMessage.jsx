@@ -3,7 +3,7 @@
  */
 
 import $ from 'jquery';
-import EventStore from '../common/EventStore.js';
+import EventStore from '../common/EventStore';
 
 const POLLING_INTERVAL = 1500;
 const BASE_URL = '';
@@ -53,7 +53,6 @@ class LocalChatStore extends EventStore {
     const url = BASE_URL + '/intern/localChat/postback';
     $.post(url, {senderID: senderID, payload: payload})
       .done((res: Object) => {
-
       })
       .fail((res: Object) => {
 
