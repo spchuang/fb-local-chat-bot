@@ -10,16 +10,20 @@ const BASE_URL = '';
 
 class LocalChatStore extends EventStore {
   _userIDToMessagesMap: Object;
+  _baseURL: string;
 
   constructor() {
     super();
     this._userIDToMessagesMap = {};
-    this.startPolling();
+  }
+
+  setBaseUrl(baseURL: string) {
+    this._baseURL = baseURL;
   }
 
   startPolling(): void {
     // get all the local messages
-    const url = BASE_URL + '/intern/localChat/getMessages';
+    const url = this._baseURL + '/localChat/getMessages';
     $.get(url)
       .done((res: Object) => {
         this._userIDToMessagesMap = res;
@@ -40,7 +44,7 @@ class LocalChatStore extends EventStore {
   }
 
   sendMessageForUser(senderID: string, message: string): void {
-    const url = BASE_URL + '/intern/localChat/sendMessage';
+    const url = this._baseURL + '/localChat/sendMessage';
     $.post(url, {senderID: senderID, message: message})
       .done((res: Object) => {
       })
@@ -50,7 +54,7 @@ class LocalChatStore extends EventStore {
   }
 
   sendPostbackForUser(senderID: string, payload: string): void {
-    const url = BASE_URL + '/intern/localChat/postback';
+    const url = this._baseURL + '/localChat/postback';
     $.post(url, {senderID: senderID, payload: payload})
       .done((res: Object) => {
 

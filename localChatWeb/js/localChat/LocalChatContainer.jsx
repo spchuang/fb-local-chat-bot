@@ -5,7 +5,6 @@
 'use strict';
 
 import React, {PropTypes} from 'react';
-import ReactDOM from 'react-dom';
 import LocalChatStore from './LocalChatStore.js';
 import LocalChatFooter from './LocalChatFooter.jsx';
 import LocalChatMessagesContent from './LocalChatMessagesContent.jsx';
@@ -61,9 +60,4 @@ const LocalChatContainer = React.createClass({
   },
 });
 
-let ID = null;
-while (ID === null) {
-  ID = prompt("Please enter a User ID", "1234");
-}
-
-ReactDOM.render(<LocalChatContainer userID={ID}/>, document.getElementById('fb-local-chat-root'));
+module.exports = LocalChatContainer;
