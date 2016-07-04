@@ -1,5 +1,5 @@
-import LocalChatContainer from './localChat/LocalChatContainer.jsx';
-import LocalChatStore from './localChat/LocalChatStore.js';
+import LocalChatContainer from './src/LocalChatContainer.jsx';
+import LocalChatStore from './src/LocalChatStore.js';
 import ReactDOM from 'react-dom';
 import React from 'react';
 

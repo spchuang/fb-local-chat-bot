@@ -3,7 +3,7 @@
  */
 
 import $ from 'jquery';
-import EventStore from '../common/EventStore.js';
+import EventStore from './EventStore.js';
 
 const POLLING_INTERVAL = 1500;
 const BASE_URL = '';
