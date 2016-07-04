@@ -53,7 +53,7 @@ class Bot extends EventEmitter {
 
     // attach local chat routes
     if (this._useLocalChat) {
-      router = FBLocalChatRoutes(router);
+      router = FBLocalChatRoutes(router, this);
     }
 
     return router;
@@ -84,7 +84,6 @@ class Bot extends EventEmitter {
         if (event.postback && event.postback.payload) {
           this.emit('postback', event);
         }
-
         // TODO: handle message delivery and authentication
       })
     });

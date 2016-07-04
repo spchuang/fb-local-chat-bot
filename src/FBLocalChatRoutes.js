@@ -8,7 +8,7 @@ import invariant from 'invariant';
 import fs from 'fs';
 import doT from 'doT';
 
-const FBLocalChatRoutes = (router: Router): Router => {
+const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
   router.get('/localChat/getMessages', (req, res) => {
     res.json(ChatUtils.getLocalChatMessages());
   });
@@ -18,7 +18,16 @@ const FBLocalChatRoutes = (router: Router): Router => {
     const message = req.body.message;
     invariant(senderID && message, 'both senderID and message are required');
 
-    //await ResponseHandler.handleText(senderID, message);
+    ChatUtils.saveSenderMessageToLocalChat(senderID, message);
+    const event = {
+      sender: {id: senderID},
+      recipiient: {id: 'pageID'},
+      timestamp: Math.floor(new Date() / 1000),
+      message: {
+        text: message,
+      },
+    };
+    Bot.emit('text', event);
     res.sendStatus(200);
   });
 
@@ -27,7 +36,15 @@ const FBLocalChatRoutes = (router: Router): Router => {
     const payload = req.body.payload;
 
     invariant(senderID && payload, 'both senderID and payload are required');
-    //await ResponseHandler.handlePostback(senderID, payload);
+    const event = {
+      sender: {id: senderID},
+      recipiient: {id: 'pageID'},
+      timestamp: Math.floor(new Date() / 1000),
+      postback: {
+        payload: payload,
+      },
+    };
+    Bot.emit('postback', event);
     res.sendStatus(200);
   });
 
