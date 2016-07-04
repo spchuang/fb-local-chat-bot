@@ -1,7 +1,8 @@
 {
-  "name": "Node_tutorial",
-  "version": "1.0.0",
-  "description": "6 things you should add to your Node projects",
+  "name": "fb-local-chat-bot",
+  "version": "0.0.1",
+  "main": "index.js",
+  "description": "A ES6 Node client for Messenger Bot designed for easy local testing",
   "dependencies": {
     "dot": "1.0.3",
     "express": "4.13.4",
@@ -50,5 +51,6 @@
     "node": "4.4.5",
     "npm": "2.15.5"
   },
-  "author": "Samping Chuang"
+  "license": "MIT",
+  "author": "Samping Chuang <sampingchuang@gmail.com>"
 }
