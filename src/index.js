@@ -139,9 +139,26 @@ class Bot extends EventEmitter {
      // TODO
    }
 
+  createPostbackButton(text: string, payload: string): Object {
+    return {
+      'type': 'postback',
+      'title': text,
+      'payload': payload,
+    };
+  }
+
+  createWebButton(text: string, url: string): Object {
+    return {
+      'type': 'web_url',
+      'url': url,
+      'title': text,
+    };
+  }
+
   /**
-   * Local Chat APIs (for tests)
+   * Local Chat APIs (for unit testing purposes)
    */
+
   getLocalChatMessages(): Object {
     this._verifyInLocalChatOrThrow();
     return ChatUtils.getLocalChatMessages();

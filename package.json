@@ -13,11 +13,12 @@
     "watch": "babel --watch=./src --out-dir=./build --source-maps inline --copy-files",
     "build": "babel ./src --out-dir=./build --source-maps inline --copy-files",
     "web_watch": "webpack --watch --watch-polling --config ./localChatWeb/js/webpack.config.js",
-    "example": "node --harmony example/app.js",
     "s": "nodemon build/app.js --watch build",
     "test": "mocha ./build/test",
     "lint": "eslint src --fix",
-    "check": "npm run lint && npm run flow && npm run test"
+    "check": "npm run lint && npm run flow && npm run test",
+    "joke": "node --harmony example/jokeChatApp.js",
+    "test_joke": "mocha ./example/test --compilers js:babel-register"
   },
   "devDependencies": {
     "babel-cli": "6.10.1",
