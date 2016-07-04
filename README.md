@@ -1,14 +1,8 @@
+# fb-local-chat-bot
 
-#### Install dependencies
+## Install
 ```
-$ npm Install
-$ npm run watch
+npm install fb-local-chat-bot
 ```
 
-#### Run
-```
-$ npm run example
-Listening on port 5000...
-[nodemon] restarting due to changes...
-[nodemon] starting `node build/app.js`
-```
+## Examlpe

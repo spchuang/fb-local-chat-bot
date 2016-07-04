@@ -7,6 +7,7 @@ import {Router} from 'express';;
 import invariant from 'invariant';
 import fs from 'fs';
 import doT from 'doT';
+import path from 'path';
 
 const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
   router.get('/localChat/getMessages', (req, res) => {
@@ -49,15 +50,17 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
   });
 
   router.get('/localChat/*', (req, res) => {
+    const dir = path.join(path.dirname(__filename), '..', 'localChatWeb');
     var filePath = req.url.replace('/localChat', '');
     if (filePath !== '/') {
-      res.sendFile(filePath, {root: './localChatWeb'});
+      res.sendFile(filePath, {root: dir});
       return
     }
     const baseURL = req.baseUrl;
 
     // return html
-    fs.readFile(__dirname + '/FBLocalChatWeb.html', 'utf8', (err, data) => {
+    fs.readFile(dir + '/index.html', 'utf8', (err, data) => {
+      console.log(err);
       if (err) {
         res.send("ERROR");
         return;
