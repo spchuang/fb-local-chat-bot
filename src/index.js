@@ -92,52 +92,52 @@ class Bot extends EventEmitter {
   /**
    * send APIs
    */
-   send(recipientID: string, messageData: Object): Promise {
-     this._verifyInitOrThrow();
-     return ChatUtils.send(
-       recipientID,
-       this._token,
-       messageData,
-       this._useLocalChat,
-     );
+  send(recipientID: string, messageData: Object): Promise {
+    this._verifyInitOrThrow();
+    return ChatUtils.send(
+      recipientID,
+      this._token,
+      messageData,
+      this._useLocalChat,
+    );
    }
 
-   sendImage(recipientID: string, imageURL: string): Promise {
-     const messageData = {
-       attachment: {
-         type: 'image',
-         payload: {
-           url: imageURL,
-         },
-       },
-     };
-     return this.send(recipientID, messageData);
+  sendImage(recipientID: string, imageURL: string): Promise {
+    const messageData = {
+      attachment: {
+        type: 'image',
+        payload: {
+          url: imageURL,
+        },
+      },
+    };
+    return this.send(recipientID, messageData);
+  }
+
+  sendText(recipientID: string, text: string): Promise {
+    const messageData = {
+      text:text,
+    };
+    return this.send(recipientID, messageData);
    }
 
-   sendText(recipientID: string, text: string): Promise {
-     const messageData = {
-       text:text
-     };
-     return this.send(recipientID, messageData);
-   }
+  sendButtons(recipientID: string, text: string, buttonList: Array<Object>): Promise {
+    const messageData = {
+      'attachment': {
+        'type':'template',
+        'payload': {
+          'template_type': 'button',
+          'text': text,
+          'buttons': buttonList,
+        },
+      },
+    };
+    return this.send(recipientID, messageData);
+  }
 
-   sendButtons(recipientID: string, text: string, buttonList: Array<Object>): Promise {
-     const messageData = {
-       'attachment': {
-         'type':'template',
-         'payload': {
-           'template_type': 'button',
-           'text': text,
-           'buttons': buttonList,
-         },
-       },
-     };
-     return this.send(recipientID, messageData);
-   }
-
-   sendTemplate(): void {
-     // TODO
-   }
+  sendTemplate(): void {
+   // TODO
+  }
 
   createPostbackButton(text: string, payload: string): Object {
     return {
@@ -158,6 +158,11 @@ class Bot extends EventEmitter {
   /**
    * Local Chat APIs (for unit testing purposes)
    */
+  saveSenderMessageToLocalChat(senderID: string, text: string): void {
+    if (this._useLocalChat) {
+      ChatUtils.saveSenderMessageToLocalChat(senderID, text);
+    }
+  }
 
   getLocalChatMessages(): Object {
     this._verifyInLocalChatOrThrow();
