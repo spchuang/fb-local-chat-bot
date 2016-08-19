@@ -3,9 +3,9 @@
 Testing your Messenger Bot apps is a pain in the ass - you need to setup ngrok to tunnel to your server (what happens when multiple people work on it?) and writing unit tests are not intuitive.
 
 fb-local-chat-bot is
-- standard library that handles the boilerplate logic to connect with FB APIs
-- local web client to debug the app (see screenshot)
-- intuitive APIs for unit testing
+- a standard library that handles the boilerplate logic to connect with FB APIs
+- a local web client to debug the app (see screenshot)
+-  a set of intuitive APIs for unit testing on messenger bot
 
 # Demo
 ![](https://github.com/spchuang/fb-local-chat-bot/blob/master/screenshot.gif)
@@ -72,6 +72,7 @@ Bot.sendButtons(
 
 ## Testing APIs
 ```
+// example using mocha
 describe('Basic server test', function() {
   this.timeout(1000);
   var server;
