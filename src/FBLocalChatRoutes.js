@@ -3,7 +3,7 @@
 'use strict';
 
 import ChatUtils from './ChatUtils';
-import {Router} from 'express';;
+import {Router} from 'express';
 import invariant from 'invariant';
 import fs from 'fs';
 import doT from 'doT';
@@ -22,7 +22,7 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     ChatUtils.saveSenderMessageToLocalChat(senderID, message);
     const event = {
       sender: {id: senderID},
-      recipiient: {id: 'pageID'},
+      recipient: {id: 'pageID'},
       timestamp: Math.floor(new Date() / 1000),
       message: {
         text: message,
@@ -39,13 +39,34 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     invariant(senderID && payload, 'both senderID and payload are required');
     const event = {
       sender: {id: senderID},
-      recipiient: {id: 'pageID'},
+      recipient: {id: 'pageID'},
       timestamp: Math.floor(new Date() / 1000),
       postback: {
         payload: payload,
       },
     };
     Bot.emit('postback', event);
+    res.sendStatus(200);
+  });
+
+  router.post('/localChat/quickReply/', (req, res) => {
+    const senderID = req.body.senderID;
+    const payload = req.body.payload;
+    const text = req.body.text
+
+    invariant(senderID && payload, 'both senderID and payload are required');
+    const event = {
+      sender: {id: senderID},
+      recipient: {id: 'pageID'},
+      timestamp: Math.floor(new Date() / 1000),
+      message: {
+        text: text,
+        quick_reply: {
+          payload: payload
+        }
+      },
+    };
+    Bot.emit('quick_reply', event);
     res.sendStatus(200);
   });
 
@@ -62,7 +83,7 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     fs.readFile(dir + '/index.html', 'utf8', (err, data) => {
       console.log(err);
       if (err) {
-        res.send("ERROR");
+        res.send('ERROR');
         return;
       }
       var tempFn = doT.template(data);

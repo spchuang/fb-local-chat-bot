@@ -8,6 +8,7 @@ import React, {PropTypes} from 'react';
 import LocalChatStore from './LocalChatStore.js';
 import LocalChatFooter from './LocalChatFooter.jsx';
 import LocalChatMessagesContent from './LocalChatMessagesContent.jsx';
+import LocalChatMessagesQuickReply from './LocalChatMessagesQuickReply.jsx';
 
 const LocalChatContainer = React.createClass({
   propTypes: {
@@ -18,6 +19,7 @@ const LocalChatContainer = React.createClass({
     return {
       userID: this.props.userID,
       messages: LocalChatStore.getMessagesForUser(this.props.userID),
+      quickReplyMessage: {},
     }
   },
 
@@ -41,6 +43,7 @@ const LocalChatContainer = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading"><b>Local FB chat test (user ID: {this.state.userID})</b></div>
           <LocalChatMessagesContent messages={this.state.messages}/>
+          <LocalChatMessagesQuickReply quickReplyMessage={this.state.quickReplyMessage}/>
           <div className="panel-footer">
             <LocalChatFooter userID={this.state.userID}>
             </LocalChatFooter>
@@ -53,11 +56,25 @@ const LocalChatContainer = React.createClass({
   _onChange(): void {
     const newMessages = LocalChatStore.getMessagesForUser(this.state.userID);
     if (newMessages.length !== this.state.messages.length) {
+      const newQuickReplyMessage = this._getQuickReplyMessage(newMessages);
       this.setState({
         messages: newMessages,
+        quickReplyMessage: newQuickReplyMessage,
       });
     }
   },
+
+  _getQuickReplyMessage(messages: Array<Object>): Object {
+    //Only render quick replies if it is the latest message
+    //Any message after it's text/attachment will cause it to disappear
+    //even if non of the options was clicked
+    let QRmessage = messages[messages.length - 1];
+    if ('quick_replies' in QRmessage){
+      return QRmessage;
+    } else {
+      return {};
+    }
+  }
 });
 
 module.exports = LocalChatContainer;

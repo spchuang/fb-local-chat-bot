@@ -12,6 +12,7 @@ import {PropTypes} from 'react';
  * 1. text Only
  * 2. image
  * 3. button template
+ * 4. quick reply with text/image
  */
 const TextMessagePropType = PropTypes.shape({
   text: PropTypes.string.isRequired,
@@ -49,9 +50,16 @@ const ButtonsTemplateMessagePropType = PropTypes.shape({
   fromUser: PropTypes.bool.isRequired,
 });
 
+const QuickReplyMessagePropType = PropTypes.shape({
+  content_type: PropTypes.oneOf(['text']).isRequired,
+  title: PropTypes.string.isRequired,
+  payload: PropTypes.string.isRequired,
+});
+
 const LocalChatMessagePropType = PropTypes.oneOfType([
   TextMessagePropType,
   ImageMessagePropType,
   ButtonsTemplateMessagePropType,
+  QuickReplyMessagePropType,
 ]);
 module.exports = LocalChatMessagePropType;

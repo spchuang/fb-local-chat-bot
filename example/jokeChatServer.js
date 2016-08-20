@@ -7,6 +7,13 @@ const JOKE = "Did you know photons had mass? I didn't even know they were Cathol
 const PostBackTypes = {
   TELL_JOKE: 'TELL_JOKE',
   TELL_ANOTHER_JOKE: 'TELL_ANOTHER_JOKE',
+  LIST_JOKES: 'LIST_JOKES',
+};
+const QuickReplyTypes = {
+  JOKE1: 'JOKE1',
+  JOKE2: 'JOKE2',
+  JOKE3: 'JOKE3',
+  JOKE4: 'JOKE4',
 };
 
 function makeServer() {
@@ -18,7 +25,10 @@ function makeServer() {
     Bot.sendButtons(
       senderID,
       'Hello, how are you?',
-      [Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE)]
+      [
+        Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
+        Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES)
+      ]
     );
   });
 
@@ -36,7 +46,24 @@ function makeServer() {
       case PostBackTypes.TELL_ANOTHER_JOKE:
         Bot.sendText(senderID, 'Sorry, I only know one joke');
         break;
+      case PostBackTypes.LIST_JOKES:
+        Bot.sendQuickReplyWithText(
+            senderID,
+            'Select a joke',
+            [
+              Bot.createQuickReply('Joke 1',QuickReplyTypes.JOKE1),
+              Bot.createQuickReply('Joke 2',QuickReplyTypes.JOKE2),
+              Bot.createQuickReply('Joke 3',QuickReplyTypes.JOKE3),
+              Bot.createQuickReply('Joke 4',QuickReplyTypes.JOKE4),
+            ]
+        );
+        break;
     }
+  });
+
+  Bot.on('quick_reply', event => {
+    const senderID = event.sender.id;
+    Bot.sendText(senderID, 'You asked for ' + event.message.text);
   });
 
   const app = express();

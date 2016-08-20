@@ -5,7 +5,7 @@
 import ChatUtils from './ChatUtils';
 import {EventEmitter} from 'events'
 import FBLocalChatRoutes from './FBLocalChatRoutes';
-import {Router} from 'express';;
+import {Router} from 'express';
 import Promise from 'bluebird';
 import invariant from 'invariant';
 
@@ -73,6 +73,12 @@ class Bot extends EventEmitter {
       entry.messaging.forEach((event) => {
         // handle messages
         if (event.message) {
+          //Since a message containing a quick_reply can also contain text
+          //and attachment, check for quick_reply first
+          if (event.message.quick_reply) {
+            this.emit('quick_reply', event);
+            return; //Continue to next event
+          }
           if (event.message.text) {
             this.emit('text', event);
           } else if (event.message.attachments) {
@@ -103,15 +109,7 @@ class Bot extends EventEmitter {
    }
 
   sendImage(recipientID: string, imageURL: string): Promise {
-    const messageData = {
-      attachment: {
-        type: 'image',
-        payload: {
-          url: imageURL,
-        },
-      },
-    };
-    return this.send(recipientID, messageData);
+    return this.send(recipientID, this.createImageAttachment(imageURL));
   }
 
   sendText(recipientID: string, text: string): Promise {
@@ -139,6 +137,30 @@ class Bot extends EventEmitter {
    // TODO
   }
 
+  sendQuickReplyWithAttachment(recipientID: string, attachment: Object, quickReplyList: Array<Object>): Promise {
+    const messageData = {
+      'attachment': attachment,
+      'quick_replies': quickReplyList,
+    }
+    return this.send(recipientID, messageData);
+  }
+
+  sendQuickReplyWithText(recipientID: string, text: string, quickReplyList: Array<Object>): Promise {
+    const messageData = {
+      'text': text,
+      'quick_replies': quickReplyList,
+    }
+    return this.send(recipientID, messageData);
+  }
+
+  createQuickReply(text: string, payload: string): Object {
+    return {
+      'content_type': 'text',
+      'title': text,
+      'payload': payload,
+    };
+  }
+
   createPostbackButton(text: string, payload: string): Object {
     return {
       'type': 'postback',
@@ -152,6 +174,17 @@ class Bot extends EventEmitter {
       'type': 'web_url',
       'url': url,
       'title': text,
+    };
+  }
+
+  createImageAttachment(imageURL: string): Object {
+    return {
+      'attachment': {
+        'type': 'image',
+        'payload': {
+          'url': imageURL,
+        },
+      },
     };
   }
 

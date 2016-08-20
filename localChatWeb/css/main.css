@@ -34,6 +34,23 @@ body {
   color: white !important;
 }
 
+.fb-local-chat-container .messages-quick-reply {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0px 5px 0px;
+}
+
+.fb-local-chat-container .messages-quick-reply .message-bubble {
+  background: white;
+  color: #3D98FD;
+  padding: 5px 10;
+  border-radius: 30px;
+  border-color: #3D98FD;
+  border-style: solid;
+  border-width: thin;
+  margin: 0px 5px 0px 5px;
+}
+
 .fb-local-chat-container .messages-content .message.me {
   float: right !important;
 }

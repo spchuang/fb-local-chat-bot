@@ -63,6 +63,17 @@ class LocalChatStore extends EventStore {
 
       });
   }
+
+  sendQuickReplyForUser(senderID: string, text: string, payload: string): void {
+    const url = this._baseURL + '/localChat/quickReply';
+    $.post(url, {senderID: senderID, text: text, payload: payload})
+      .done((res: Object) => {
+
+      })
+      .fail((res: Object) => {
+
+      });
+  }
 }
 
 const store = new LocalChatStore();
