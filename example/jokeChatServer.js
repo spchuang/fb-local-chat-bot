@@ -4,17 +4,20 @@ const bodyParser = require('body-parser')
 const Promise = require('bluebird');
 
 const JOKE = "Did you know photons had mass? I didn't even know they were Catholic.";
+const RiddleImageUrl ="http://tinyurl.com/he9tsph";
 const PostBackTypes = {
   TELL_JOKE: 'TELL_JOKE',
   TELL_ANOTHER_JOKE: 'TELL_ANOTHER_JOKE',
   LIST_JOKES: 'LIST_JOKES',
+  TELL_RIDDLE: 'TELL_RIDDLE',
 };
 const QuickReplyTypes = {
-  JOKE1: 'JOKE1',
-  JOKE2: 'JOKE2',
-  JOKE3: 'JOKE3',
-  JOKE4: 'JOKE4',
-};
+  TELL_JOKE: 'TELL_JOKE',
+  WRONG_ANSWER: 'WRONG_ANSWER',
+  CORRECT_ANSWER: 'CORRECT_ANSWER',
+}
+// Create 10 Quick Replies, Joke 1, Joke 2, ...
+const JokeQuickReplies = [...Array(10).keys()].map(x => Bot.createQuickReply(`Joke ${x+1}`, 'TELL_JOKE'));
 
 function makeServer() {
   // initialize Bot and define event handlers
@@ -27,7 +30,8 @@ function makeServer() {
       'Hello, how are you?',
       [
         Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
-        Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES)
+        Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES),
+        Bot.createPostbackButton('Solve a riddle', PostBackTypes.TELL_RIDDLE),
       ]
     );
   });
@@ -50,20 +54,37 @@ function makeServer() {
         Bot.sendQuickReplyWithText(
             senderID,
             'Select a joke',
-            [
-              Bot.createQuickReply('Joke 1',QuickReplyTypes.JOKE1),
-              Bot.createQuickReply('Joke 2',QuickReplyTypes.JOKE2),
-              Bot.createQuickReply('Joke 3',QuickReplyTypes.JOKE3),
-              Bot.createQuickReply('Joke 4',QuickReplyTypes.JOKE4),
-            ]
+            JokeQuickReplies
         );
         break;
+      case PostBackTypes.TELL_RIDDLE:
+        Bot.sendQuickReplyWithAttachment(
+          senderID,
+          Bot.createImageAttachment(RiddleImageUrl),
+          [
+            Bot.createQuickReply('97', QuickReplyTypes.WRONG_ANSWER),
+            Bot.createQuickReply('87', QuickReplyTypes.CORRECT_ANSWER),
+            Bot.createQuickReply('89', QuickReplyTypes.WRONG_ANSWER),
+            Bot.createQuickReply('91', QuickReplyTypes.WRONG_ANSWER),
+          ]
+        )
     }
   });
 
   Bot.on('quick_reply', event => {
     const senderID = event.sender.id;
-    Bot.sendText(senderID, 'You asked for ' + event.message.text);
+    switch(event.message.quick_reply.payload) {
+      case QuickReplyTypes.TELL_JOKE:
+        Bot.sendText(senderID, 'You asked for ' + event.message.text);
+        break;
+      case QuickReplyTypes.WRONG_ANSWER:
+        Bot.sendText(senderID, 'Wrong answer... :(');
+        break;
+      case QuickReplyTypes.CORRECT_ANSWER:
+        Bot.sendText(senderID, 'Correct answer! :)');
+        break;
+    }
+
   });
 
   const app = express();

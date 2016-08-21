@@ -19,14 +19,16 @@ const TextMessagePropType = PropTypes.shape({
   fromUser: PropTypes.bool.isRequired,
 });
 
+const ImagePropType = PropTypes.shape({
+  type: PropTypes.oneOf(['image']).isRequired,
+  payload: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+  })
+});
+
 const ImageMessagePropType = PropTypes.shape({
   text: PropTypes.string,
-  attachment: PropTypes.shape({
-    type: PropTypes.oneOf(['image']).isRequired,
-    payload: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-    }).isRequired,
-  }),
+  attachment: ImagePropType.isRequired,
   fromUser: PropTypes.bool.isRequired,
 });
 
@@ -50,16 +52,30 @@ const ButtonsTemplateMessagePropType = PropTypes.shape({
   fromUser: PropTypes.bool.isRequired,
 });
 
-const QuickReplyMessagePropType = PropTypes.shape({
+const QuickRepliesPropType = PropTypes.shape({
   content_type: PropTypes.oneOf(['text']).isRequired,
   title: PropTypes.string.isRequired,
   payload: PropTypes.string.isRequired,
+});
+
+const QuickReplyMessageWithTextPropType = PropTypes.shape({
+  text: PropTypes.string.isRequired,
+  quick_replies: PropTypes.arrayOf(QuickRepliesPropType),
+  fromUser: PropTypes.bool.isRequired,
+});
+
+const QuickReplyMessageWithImagePropType = PropTypes.shape({
+  attachment: ImagePropType.isRequired,
+  quick_replies: PropTypes.arrayOf(QuickRepliesPropType),
+  fromUser: PropTypes.bool.isRequired,
 });
 
 const LocalChatMessagePropType = PropTypes.oneOfType([
   TextMessagePropType,
   ImageMessagePropType,
   ButtonsTemplateMessagePropType,
-  QuickReplyMessagePropType,
+  QuickReplyMessageWithTextPropType,
+  QuickReplyMessageWithImagePropType,
 ]);
+
 module.exports = LocalChatMessagePropType;

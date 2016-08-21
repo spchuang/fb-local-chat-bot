@@ -19,7 +19,7 @@ const LocalChatContainer = React.createClass({
     return {
       userID: this.props.userID,
       messages: LocalChatStore.getMessagesForUser(this.props.userID),
-      quickReplyMessage: {},
+      quickReplyMessage: [],
     }
   },
 
@@ -65,14 +65,14 @@ const LocalChatContainer = React.createClass({
   },
 
   _getQuickReplyMessage(messages: Array<Object>): Object {
-    //Only render quick replies if it is the latest message
-    //Any message after it's text/attachment will cause it to disappear
-    //even if non of the options was clicked
-    let QRmessage = messages[messages.length - 1];
-    if ('quick_replies' in QRmessage){
-      return QRmessage;
+    // Only render quick replies if it is the latest message
+    // Any message after it's text/attachment will cause it to disappear
+    // even if non of the options was clicked
+    let lastMessage = messages[messages.length - 1];
+    if ('quick_replies' in lastMessage){
+      return lastMessage;
     } else {
-      return {};
+      return [];
     }
   }
 });

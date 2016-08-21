@@ -19,35 +19,50 @@ const LocalChatMessagesQuickReply = React.createClass({
   },
 
   render(): React.Element {
-    let quickReplyButtons = []
-    if ('quick_replies' in this.props.quickReplyMessage){
+    let quickReplyButtons = [];
+    if (!('quick_replies' in this.props.quickReplyMessage)) {
+      return null;
+    } else {
       quickReplyButtons = this.props.quickReplyMessage.quick_replies
-      .map((qr) => {
+      .map((quickReplyButton) => {
         return (
-          <div>
-            <button
-              onClick={() => this._clickButton(qr)}
-              key={qr.title}
-              className={classNames(
-                'message', {
-                  'message-bubble': true,
-              })}>
-              {qr.title}
-            </button>
-            <div key='clearDiv' className="clear"></div>
-          </div>
+          <button
+            onClick={() => this._clickButton(quickReplyButton)}
+            key={quickReplyButton.title}
+            className={classNames(
+              'message', {
+                'message-bubble': true,
+            })}>
+            {quickReplyButton.title}
+          </button>
         );
       });
     }
     return (
-      <div className='messages-quick-reply'>
+      <div id='messages-quick-reply' className='messages-quick-reply'>
         {quickReplyButtons}
       </div>
     );
   },
 
-  _clickButton(qr: Object): void {
-    LocalChatStore.sendQuickReplyForUser(this.context.userID, qr.title, qr.payload);
+  componentDidUpdate(prevProps: Object, prevState:Object): void {
+    // if quick reply div overflows, change justify-content to flex-start
+    let messagesQuickReplyDiv = document.getElementById('messages-quick-reply');
+    if (!messagesQuickReplyDiv) {
+      return;
+    }
+    if (messagesQuickReplyDiv.scrollHeight > messagesQuickReplyDiv.clientHeight
+      || messagesQuickReplyDiv.scrollWidth > messagesQuickReplyDiv.clientWidth) {
+      messagesQuickReplyDiv.style.justifyContent = 'flex-start';
+    }
+  },
+
+  _clickButton(quickReplyButton: Object): void {
+    LocalChatStore.sendQuickReplyForUser(
+      this.context.userID,
+      quickReplyButton.title,
+      quickReplyButton.payload
+    );
   },
 });
 

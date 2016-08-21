@@ -73,11 +73,11 @@ class Bot extends EventEmitter {
       entry.messaging.forEach((event) => {
         // handle messages
         if (event.message) {
-          //Since a message containing a quick_reply can also contain text
-          //and attachment, check for quick_reply first
+          // Since a message containing a quick_reply can also contain text
+          // and attachment, check for quick_reply first
           if (event.message.quick_reply) {
             this.emit('quick_reply', event);
-            return; //Continue to next event
+            return;
           }
           if (event.message.text) {
             this.emit('text', event);
@@ -179,11 +179,9 @@ class Bot extends EventEmitter {
 
   createImageAttachment(imageURL: string): Object {
     return {
-      'attachment': {
-        'type': 'image',
-        'payload': {
-          'url': imageURL,
-        },
+      'type': 'image',
+      'payload': {
+        'url': imageURL,
       },
     };
   }
