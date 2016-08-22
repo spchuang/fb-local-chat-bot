@@ -19,7 +19,7 @@ const LocalChatMessagesQuickReply = React.createClass({
   },
 
   render(): React.Element {
-    let quickReplyButtons = [];
+    let quickReplyButtons = {};
     if (!('quick_replies' in this.props.quickReplyMessage)) {
       return null;
     } else {
