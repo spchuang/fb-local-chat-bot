@@ -11,19 +11,19 @@ import LocalChatStore from './LocalChatStore.js';
 
 const LocalChatMessagesQuickReply = React.createClass({
   propTypes: {
-    quickReplyMessage: LocalChatMessagePropType,
+    message: LocalChatMessagePropType.isRequired,
   },
 
   contextTypes: {
     userID: React.PropTypes.string,
   },
 
-  render(): React.Element {
-    let quickReplyButtons = {};
-    if (!('quick_replies' in this.props.quickReplyMessage)) {
+  render(): ?React.Element {
+    if (!this.props.message || !('quick_replies' in this.props.message)) {
       return null;
-    } else {
-      quickReplyButtons = this.props.quickReplyMessage.quick_replies
+    }
+
+    const quickReplyButtons = this.props.message.quick_replies
       .map((quickReplyButton) => {
         return (
           <button
@@ -37,7 +37,6 @@ const LocalChatMessagesQuickReply = React.createClass({
           </button>
         );
       });
-    }
     return (
       <div id='messages-quick-reply' className='messages-quick-reply'>
         {quickReplyButtons}
@@ -61,7 +60,7 @@ const LocalChatMessagesQuickReply = React.createClass({
     LocalChatStore.sendQuickReplyForUser(
       this.context.userID,
       quickReplyButton.title,
-      quickReplyButton.payload
+      quickReplyButton.payload,
     );
   },
 });

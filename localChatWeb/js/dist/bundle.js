@@ -80,6 +80,8 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(console) {
+	
 	'use strict';
 	
 	var _react = __webpack_require__(2);
@@ -114,8 +116,7 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      userID: this.props.userID,
-	      messages: _LocalChatStore2.default.getMessagesForUser(this.props.userID),
-	      quickReplyMessage: {}
+	      messages: _LocalChatStore2.default.getMessagesForUser(this.props.userID)
 	    };
 	  },
 	
@@ -134,6 +135,8 @@
 	    _LocalChatStore2.default.addChangeListener(this._onChange);
 	  },
 	  render: function render() {
+	    var messages = this.state.messages;
+	    console.log(messages);
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3' },
@@ -151,8 +154,8 @@
 	            ')'
 	          )
 	        ),
-	        _react2.default.createElement(_LocalChatMessagesContent2.default, { messages: this.state.messages }),
-	        _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { quickReplyMessage: this.state.quickReplyMessage }),
+	        _react2.default.createElement(_LocalChatMessagesContent2.default, { messages: messages }),
+	        _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { message: messages[messages.length - 1] }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'panel-footer' },
@@ -164,16 +167,15 @@
 	  _onChange: function _onChange() {
 	    var newMessages = _LocalChatStore2.default.getMessagesForUser(this.state.userID);
 	    if (newMessages.length !== this.state.messages.length) {
-	      // const newQuickReplyMessage = this._getQuickReplyMessage(newMessages);
 	      this.setState({
-	        messages: newMessages,
-	        quickReplyMessage: newMessages[newMessages.length - 1]
+	        messages: newMessages
 	      });
 	    }
 	  }
 	});
 	
 	module.exports = LocalChatContainer;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ },
 /* 2 */
@@ -282,6 +284,7 @@
 /***/ function(module, exports) {
 
 	// shim for using process in browser
+	
 	var process = module.exports = {};
 	
 	// cached from whatever global is present so that test runners that stub it
@@ -293,63 +296,21 @@
 	var cachedClearTimeout;
 	
 	(function () {
-	    try {
-	        cachedSetTimeout = setTimeout;
-	    } catch (e) {
-	        cachedSetTimeout = function () {
-	            throw new Error('setTimeout is not defined');
-	        }
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
 	    }
-	    try {
-	        cachedClearTimeout = clearTimeout;
-	    } catch (e) {
-	        cachedClearTimeout = function () {
-	            throw new Error('clearTimeout is not defined');
-	        }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
 	    }
+	  }
 	} ())
-	function runTimeout(fun) {
-	    if (cachedSetTimeout === setTimeout) {
-	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedSetTimeout(fun, 0);
-	    } catch(e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-	            return cachedSetTimeout.call(null, fun, 0);
-	        } catch(e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-	            return cachedSetTimeout.call(this, fun, 0);
-	        }
-	    }
-	
-	
-	}
-	function runClearTimeout(marker) {
-	    if (cachedClearTimeout === clearTimeout) {
-	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedClearTimeout(marker);
-	    } catch (e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-	            return cachedClearTimeout.call(null, marker);
-	        } catch (e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-	            return cachedClearTimeout.call(this, marker);
-	        }
-	    }
-	
-	
-	
-	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -374,7 +335,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = runTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -391,7 +352,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    runClearTimeout(timeout);
+	    cachedClearTimeout(timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -403,7 +364,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        runTimeout(drainQueue);
+	        cachedSetTimeout(drainQueue, 0);
 	    }
 	};
 	
@@ -1291,12 +1252,20 @@
 	var warning = emptyFunction;
 	
 	if (process.env.NODE_ENV !== 'production') {
-	  (function () {
-	    var printWarning = function printWarning(format) {
-	      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	        args[_key - 1] = arguments[_key];
-	      }
+	  warning = function warning(condition, format) {
+	    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+	      args[_key - 2] = arguments[_key];
+	    }
 	
+	    if (format === undefined) {
+	      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+	    }
+	
+	    if (format.indexOf('Failed Composite propType: ') === 0) {
+	      return; // Ignore CompositeComponent proptype check.
+	    }
+	
+	    if (!condition) {
 	      var argIndex = 0;
 	      var message = 'Warning: ' + format.replace(/%s/g, function () {
 	        return args[argIndex++];
@@ -1310,26 +1279,8 @@
 	        // to find the callsite that caused this warning to fire.
 	        throw new Error(message);
 	      } catch (x) {}
-	    };
-	
-	    warning = function warning(condition, format) {
-	      if (format === undefined) {
-	        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-	      }
-	
-	      if (format.indexOf('Failed Composite propType: ') === 0) {
-	        return; // Ignore CompositeComponent proptype check.
-	      }
-	
-	      if (!condition) {
-	        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-	          args[_key2 - 2] = arguments[_key2];
-	        }
-	
-	        printWarning.apply(undefined, [format].concat(args));
-	      }
-	    };
-	  })();
+	    }
+	  };
 	}
 	
 	module.exports = warning;
@@ -16140,6 +16091,8 @@
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
+	
+	
 	'use strict';
 	
 	var _react = __webpack_require__(2);
@@ -21862,7 +21815,7 @@
 	 * @return {boolean}
 	 */
 	function hasArrayNature(obj) {
-	  return (
+	  return(
 	    // not null/false
 	    !!obj && (
 	    // arrays are objects, NodeLists are functions in Safari
@@ -32344,6 +32297,8 @@
 /* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
+	
+	
 	'use strict';
 	
 	var _react = __webpack_require__(2);
@@ -32389,7 +32344,9 @@
 /* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(console) {'use strict';
+	
+	
+	'use strict';
 	
 	var _react = __webpack_require__(2);
 	
@@ -32501,7 +32458,6 @@
 	  },
 	  _renderImage: function _renderImage() {
 	    var message = this.props.message;
-	    console.log(message.attachment.payload.url);
 	    return _react2.default.createElement('img', { src: message.attachment.payload.url });
 	  },
 	  _clickButton: function _clickButton(button) {
@@ -32513,7 +32469,6 @@
 	});
 	
 	module.exports = LocalChatMessage;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ },
 /* 182 */
@@ -32573,6 +32528,8 @@
 /* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
+	
+	
 	'use strict';
 	
 	var _react = __webpack_require__(2);
@@ -32707,6 +32664,7 @@
 /* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
+	
 	'use strict';
 	
 	var _react = __webpack_require__(2);
@@ -32735,7 +32693,7 @@
 	  displayName: 'LocalChatMessagesQuickReply',
 	
 	  propTypes: {
-	    quickReplyMessage: _LocalChatMessagePropType2.default
+	    message: _LocalChatMessagePropType2.default.isRequired
 	  },
 	
 	  contextTypes: {
@@ -32745,25 +32703,24 @@
 	  render: function render() {
 	    var _this = this;
 	
-	    var quickReplyButtons = {};
-	    if (!('quick_replies' in this.props.quickReplyMessage)) {
+	    if (!this.props.message || !('quick_replies' in this.props.message)) {
 	      return null;
-	    } else {
-	      quickReplyButtons = this.props.quickReplyMessage.quick_replies.map(function (quickReplyButton) {
-	        return _react2.default.createElement(
-	          'button',
-	          {
-	            onClick: function onClick() {
-	              return _this._clickButton(quickReplyButton);
-	            },
-	            key: quickReplyButton.title,
-	            className: (0, _classNames2.default)('message', {
-	              'message-bubble': true
-	            }) },
-	          quickReplyButton.title
-	        );
-	      });
 	    }
+	
+	    var quickReplyButtons = this.props.message.quick_replies.map(function (quickReplyButton) {
+	      return _react2.default.createElement(
+	        'button',
+	        {
+	          onClick: function onClick() {
+	            return _this._clickButton(quickReplyButton);
+	          },
+	          key: quickReplyButton.title,
+	          className: (0, _classNames2.default)('message', {
+	            'message-bubble': true
+	          }) },
+	        quickReplyButton.title
+	      );
+	    });
 	    return _react2.default.createElement(
 	      'div',
 	      { id: 'messages-quick-reply', className: 'messages-quick-reply' },

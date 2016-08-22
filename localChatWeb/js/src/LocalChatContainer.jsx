@@ -19,7 +19,6 @@ const LocalChatContainer = React.createClass({
     return {
       userID: this.props.userID,
       messages: LocalChatStore.getMessagesForUser(this.props.userID),
-      quickReplyMessage: {},
     }
   },
 
@@ -38,12 +37,14 @@ const LocalChatContainer = React.createClass({
   },
 
   render(): React.Element {
+    const messages = this.state.messages;
+    console.log(messages);
     return (
       <div className='fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3'>
         <div className="panel panel-default">
           <div className="panel-heading"><b>Local FB chat test (user ID: {this.state.userID})</b></div>
-          <LocalChatMessagesContent messages={this.state.messages}/>
-          <LocalChatMessagesQuickReply quickReplyMessage={this.state.quickReplyMessage}/>
+          <LocalChatMessagesContent messages={messages}/>
+          <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
           <div className="panel-footer">
             <LocalChatFooter userID={this.state.userID}>
             </LocalChatFooter>
@@ -56,10 +57,8 @@ const LocalChatContainer = React.createClass({
   _onChange(): void {
     const newMessages = LocalChatStore.getMessagesForUser(this.state.userID);
     if (newMessages.length !== this.state.messages.length) {
-      // const newQuickReplyMessage = this._getQuickReplyMessage(newMessages);
       this.setState({
         messages: newMessages,
-        quickReplyMessage: newMessages[newMessages.length - 1],
       });
     }
   },

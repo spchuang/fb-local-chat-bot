@@ -87,7 +87,6 @@ const LocalChatMessage = React.createClass({
 
   _renderImage(): React.Element {
     const message = this.props.message;
-    console.log(message.attachment.payload.url);
     return (
       <img src={message.attachment.payload.url} />
     );
