@@ -109,7 +109,7 @@ class Bot extends EventEmitter {
    }
 
   sendImage(recipientID: string, imageURL: string): Promise {
-    return this.send(recipientID, this.createImageAttachment(imageURL));
+    return this.send(recipientID, {'attachment': this.createImageAttachment(imageURL)});
   }
 
   sendText(recipientID: string, text: string): Promise {
