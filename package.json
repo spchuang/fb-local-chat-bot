@@ -1,6 +1,6 @@
 {
   "name": "fb-local-chat-bot",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "description": "A ES6 Node client for Messenger Bot designed for easy local testing",
   "dependencies": {

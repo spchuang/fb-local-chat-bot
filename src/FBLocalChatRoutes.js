@@ -6,7 +6,7 @@ import ChatUtils from './ChatUtils';
 import {Router} from 'express';
 import invariant from 'invariant';
 import fs from 'fs';
-import doT from 'doT';
+import dot from 'dot';
 import path from 'path';
 
 const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
@@ -86,7 +86,7 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
         res.send('ERROR');
         return;
       }
-      var tempFn = doT.template(data);
+      var tempFn = dot.template(data);
       res.send(tempFn({baseURL}));
     });
   });
