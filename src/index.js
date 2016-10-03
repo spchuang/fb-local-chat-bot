@@ -90,7 +90,11 @@ class Bot extends EventEmitter {
         if (event.postback && event.postback.payload) {
           this.emit('postback', event);
         }
-        // TODO: handle message delivery and authentication
+        // Handle authentication
+        if (event.optin && event.optin.ref) {
+          this.emit('optin', event);
+        }
+        // TODO: handle message delivery
       })
     });
   }

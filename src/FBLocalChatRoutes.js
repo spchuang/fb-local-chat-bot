@@ -32,6 +32,23 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     res.sendStatus(200);
   });
 
+  router.post('/localChat/optin/', (req, res) => {
+    const senderID = req.body.senderID;
+    const ref = req.body.ref;
+
+    invariant(senderID && ref, 'both senderID and payload are required');
+    const event = {
+      sender: {id: senderID},
+      recipient: {id: 'pageID'},
+      timestamp: Math.floor(new Date() / 1000),
+      optin: {
+        ref: ref,
+      },
+    };
+    Bot.emit('optin', event);
+    res.sendStatus(200);
+  });
+
   router.post('/localChat/postback/', (req, res) => {
     const senderID = req.body.senderID;
     const payload = req.body.payload;
