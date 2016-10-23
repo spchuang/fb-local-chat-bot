@@ -36,6 +36,16 @@ class LocalChatStore extends EventStore {
       });
   }
 
+  sendOptinForUser(senderID: string, param: string): void {
+    const url = this._baseURL + '/localChat/optin';
+    $.post(url, {senderID: senderID, ref: param})
+      .done((res: Object) => {
+      })
+      .fail((res: Object) => {
+        console.log(res);
+      });
+  }
+
   getMessagesForUser(userID: string): Array<Object> {
     if (userID in this._userIDToMessagesMap) {
       return this._userIDToMessagesMap[userID];

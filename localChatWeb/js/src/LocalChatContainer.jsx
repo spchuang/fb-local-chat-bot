@@ -6,6 +6,7 @@
 
 import React, {PropTypes} from 'react';
 import LocalChatStore from './LocalChatStore.js';
+import LocalChatOptin from './LocalChatOptin.jsx';
 import LocalChatFooter from './LocalChatFooter.jsx';
 import LocalChatMessagesContent from './LocalChatMessagesContent.jsx';
 import LocalChatMessagesQuickReply from './LocalChatMessagesQuickReply.jsx';
@@ -42,7 +43,11 @@ const LocalChatContainer = React.createClass({
     return (
       <div className='fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3'>
         <div className="panel panel-default">
-          <div className="panel-heading"><b>Local FB chat test (user ID: {this.state.userID})</b></div>
+          <div className="panel-heading">
+            <b>Local FB chat test (user ID: {this.state.userID})</b>
+            <LocalChatOptin userID={this.state.userID}>
+            </LocalChatOptin>
+          </div>
           <LocalChatMessagesContent messages={messages}/>
           <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
           <div className="panel-footer">
