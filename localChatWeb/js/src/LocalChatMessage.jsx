@@ -94,7 +94,7 @@ const LocalChatMessage = React.createClass({
 
   _clickButton(button: Object): void {
     if (button.type === 'web_url') {
-      return;
+      this.props.loadWebview(button.url);
     }
     LocalChatStore.sendPostbackForUser(this.context.userID, button.payload);
   },

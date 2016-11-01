@@ -181,6 +181,31 @@ class Bot extends EventEmitter {
     };
   }
 
+  /**
+   * For 'height' parameter, use 'compact' (1/2 screen), 'tall' (3/4 screen) or 'full'
+   */
+  createWebviewButton(text: string, url: string, height: string): Object {
+    return {
+      'type': 'web_url',
+      'url': url,
+      'title': text,
+      'webview_height_ratio': height,
+    }
+  }
+
+  /**
+   * To use this and enable extension, make sure to whitelist your domain and make sure it's https
+   */
+  createWebviewButtonWithExtension(text: string, url: string, height: string): Object {
+    return {
+      'type': 'web_url',
+      'url': url,
+      'title': text,
+      'webview_height_ratio': height,
+      "messenger_extensions": true,
+    }
+  }
+
   createImageAttachment(imageURL: string): Object {
     return {
       'type': 'image',

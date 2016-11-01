@@ -32,6 +32,7 @@ function makeServer() {
         Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
         Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES),
         Bot.createPostbackButton('Solve a riddle', PostBackTypes.TELL_RIDDLE),
+        Bot.createWebviewButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
       ]
     );
   });

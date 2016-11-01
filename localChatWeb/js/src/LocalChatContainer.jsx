@@ -10,6 +10,8 @@ import LocalChatOptin from './LocalChatOptin.jsx';
 import LocalChatFooter from './LocalChatFooter.jsx';
 import LocalChatMessagesContent from './LocalChatMessagesContent.jsx';
 import LocalChatMessagesQuickReply from './LocalChatMessagesQuickReply.jsx';
+import LocalChatWebview from './LocalChatWebview.jsx';
+import LocalChatWebviewOverlay from './LocalChatWebviewOverlay.jsx';
 
 const LocalChatContainer = React.createClass({
   propTypes: {
@@ -20,6 +22,8 @@ const LocalChatContainer = React.createClass({
     return {
       userID: this.props.userID,
       messages: LocalChatStore.getMessagesForUser(this.props.userID),
+      webviewURL: "",
+      hideWebview: true,
     }
   },
 
@@ -48,11 +52,18 @@ const LocalChatContainer = React.createClass({
             <LocalChatOptin userID={this.state.userID}>
             </LocalChatOptin>
           </div>
-          <LocalChatMessagesContent messages={messages}/>
-          <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
-          <div className="panel-footer">
-            <LocalChatFooter userID={this.state.userID}>
-            </LocalChatFooter>
+          <div className="chat-content-container">
+            <LocalChatWebviewOverlay hide={this.state.hideWebview}/>
+            <LocalChatWebview
+              webviewURL={this.state.webviewURL}
+              hide={this.state.hideWebview}
+              closeWebview={this._closeWebview} />
+            <LocalChatMessagesContent messages={messages} loadWebview={this._loadWebview}/>
+            <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
+            <div className="panel-footer">
+              <LocalChatFooter userID={this.state.userID}>
+              </LocalChatFooter>
+            </div>
           </div>
         </div>
       </div>
@@ -67,6 +78,21 @@ const LocalChatContainer = React.createClass({
       });
     }
   },
+
+  _loadWebview(url: string): void {
+    this.setState( {
+      webviewURL: url,
+      hideWebview: false
+    });
+  },
+
+  _closeWebview(): void {
+    console.log('clicked');
+    this.setState( {
+      webviewURL: '',
+      hideWebview: true,
+    });
+  }
 });
 
 module.exports = LocalChatContainer;

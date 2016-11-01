@@ -90,21 +90,29 @@
 	
 	var _LocalChatStore2 = _interopRequireDefault(_LocalChatStore);
 	
-	var _LocalChatOptin = __webpack_require__(186);
+	var _LocalChatOptin = __webpack_require__(179);
 	
 	var _LocalChatOptin2 = _interopRequireDefault(_LocalChatOptin);
 	
-	var _LocalChatFooter = __webpack_require__(179);
+	var _LocalChatFooter = __webpack_require__(180);
 	
 	var _LocalChatFooter2 = _interopRequireDefault(_LocalChatFooter);
 	
-	var _LocalChatMessagesContent = __webpack_require__(180);
+	var _LocalChatMessagesContent = __webpack_require__(181);
 	
 	var _LocalChatMessagesContent2 = _interopRequireDefault(_LocalChatMessagesContent);
 	
-	var _LocalChatMessagesQuickReply = __webpack_require__(185);
+	var _LocalChatMessagesQuickReply = __webpack_require__(186);
 	
 	var _LocalChatMessagesQuickReply2 = _interopRequireDefault(_LocalChatMessagesQuickReply);
+	
+	var _LocalChatWebview = __webpack_require__(187);
+	
+	var _LocalChatWebview2 = _interopRequireDefault(_LocalChatWebview);
+	
+	var _LocalChatWebviewOverlay = __webpack_require__(188);
+	
+	var _LocalChatWebviewOverlay2 = _interopRequireDefault(_LocalChatWebviewOverlay);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -118,7 +126,9 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      userID: this.props.userID,
-	      messages: _LocalChatStore2.default.getMessagesForUser(this.props.userID)
+	      messages: _LocalChatStore2.default.getMessagesForUser(this.props.userID),
+	      webviewURL: "",
+	      hideWebview: true
 	    };
 	  },
 	
@@ -157,12 +167,21 @@
 	          ),
 	          _react2.default.createElement(_LocalChatOptin2.default, { userID: this.state.userID })
 	        ),
-	        _react2.default.createElement(_LocalChatMessagesContent2.default, { messages: messages }),
-	        _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { message: messages[messages.length - 1] }),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'panel-footer' },
-	          _react2.default.createElement(_LocalChatFooter2.default, { userID: this.state.userID })
+	          { className: 'chat-content-container' },
+	          _react2.default.createElement(_LocalChatWebviewOverlay2.default, { hide: this.state.hideWebview }),
+	          _react2.default.createElement(_LocalChatWebview2.default, {
+	            webviewURL: this.state.webviewURL,
+	            hide: this.state.hideWebview,
+	            closeWebview: this._closeWebview }),
+	          _react2.default.createElement(_LocalChatMessagesContent2.default, { messages: messages, loadWebview: this._loadWebview }),
+	          _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { message: messages[messages.length - 1] }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'panel-footer' },
+	            _react2.default.createElement(_LocalChatFooter2.default, { userID: this.state.userID })
+	          )
 	        )
 	      )
 	    );
@@ -174,6 +193,19 @@
 	        messages: newMessages
 	      });
 	    }
+	  },
+	  _loadWebview: function _loadWebview(url) {
+	    this.setState({
+	      webviewURL: url,
+	      hideWebview: false
+	    });
+	  },
+	  _closeWebview: function _closeWebview() {
+	    console.log('clicked');
+	    this.setState({
+	      webviewURL: '',
+	      hideWebview: true
+	    });
 	  }
 	});
 	
@@ -213,7 +245,7 @@
 	  function LocalChatStore() {
 	    _classCallCheck(this, LocalChatStore);
 	
-	    var _this = _possibleConstructorReturn(this, (LocalChatStore.__proto__ || Object.getPrototypeOf(LocalChatStore)).call(this));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LocalChatStore).call(this));
 	
 	    _this._userIDToMessagesMap = {};
 	    return _this;
@@ -987,40 +1019,25 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 	
-	function defaultSetTimout() {
-	    throw new Error('setTimeout has not been defined');
-	}
-	function defaultClearTimeout () {
-	    throw new Error('clearTimeout has not been defined');
-	}
 	(function () {
 	    try {
-	        if (typeof setTimeout === 'function') {
-	            cachedSetTimeout = setTimeout;
-	        } else {
-	            cachedSetTimeout = defaultSetTimout;
-	        }
+	        cachedSetTimeout = setTimeout;
 	    } catch (e) {
-	        cachedSetTimeout = defaultSetTimout;
+	        cachedSetTimeout = function () {
+	            throw new Error('setTimeout is not defined');
+	        }
 	    }
 	    try {
-	        if (typeof clearTimeout === 'function') {
-	            cachedClearTimeout = clearTimeout;
-	        } else {
-	            cachedClearTimeout = defaultClearTimeout;
-	        }
+	        cachedClearTimeout = clearTimeout;
 	    } catch (e) {
-	        cachedClearTimeout = defaultClearTimeout;
+	        cachedClearTimeout = function () {
+	            throw new Error('clearTimeout is not defined');
+	        }
 	    }
 	} ())
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    // if setTimeout wasn't available but was latter defined
-	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-	        cachedSetTimeout = setTimeout;
 	        return setTimeout(fun, 0);
 	    }
 	    try {
@@ -1041,11 +1058,6 @@
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
 	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    // if clearTimeout wasn't available but was latter defined
-	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-	        cachedClearTimeout = clearTimeout;
 	        return clearTimeout(marker);
 	    }
 	    try {
@@ -11777,7 +11789,7 @@
 	  function EventStore() {
 	    _classCallCheck(this, EventStore);
 	
-	    return _possibleConstructorReturn(this, (EventStore.__proto__ || Object.getPrototypeOf(EventStore)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(EventStore).apply(this, arguments));
 	  }
 	
 	  _createClass(EventStore, [{
@@ -26213,8 +26225,7 @@
 	  if (x === y) {
 	    // Steps 1-5, 7-10
 	    // Steps 6.b-6.e: +0 != -0
-	    // Added the nonzero y check to make Flow happy, but it is redundant
-	    return x !== 0 || y !== 0 || 1 / x === 1 / y;
+	    return x !== 0 || 1 / x === 1 / y;
 	  } else {
 	    // Step 6.a: NaN == NaN
 	    return x !== x && y !== y;
@@ -32310,6 +32321,84 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var LocalChatOptin = _react2.default.createClass({
+	  displayName: 'LocalChatOptin',
+	
+	  propTypes: {
+	    userID: _react.PropTypes.string.isRequired
+	  },
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      val: ''
+	    };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'chat-optin' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'input-group' },
+	        _react2.default.createElement('input', {
+	          ref: 'passThroughParam',
+	          type: 'text',
+	          value: this.state.val,
+	          className: 'form-control input-sm',
+	          placeholder: 'PASS_THROUGH_PARAM',
+	          onChange: this._onChange
+	        }),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'input-group-btn' },
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'btn btn-primary btn-sm',
+	              onClick: this._onAuthenticate },
+	            'Authenticate'
+	          )
+	        )
+	      )
+	    );
+	  },
+	  _onChange: function _onChange() {
+	    this.setState({
+	      val: this.refs.passThroughParam.value
+	    });
+	  },
+	  _onAuthenticate: function _onAuthenticate() {
+	    var param = this.refs.passThroughParam.value;
+	    if (param === '') {
+	      return;
+	    }
+	    _LocalChatStore2.default.sendOptinForUser(this.props.userID, param);
+	    this.setState({ val: '' });
+	  }
+	});
+	
+	module.exports = LocalChatOptin;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(173);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(13);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _LocalChatStore = __webpack_require__(2);
+	
+	var _LocalChatStore2 = _interopRequireDefault(_LocalChatStore);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var LocalChatFooter = _react2.default.createClass({
 	  displayName: 'LocalChatFooter',
 	
@@ -32375,51 +32464,6 @@
 	module.exports = LocalChatFooter;
 
 /***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _react = __webpack_require__(173);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(13);
-	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-	
-	var _LocalChatMessage = __webpack_require__(181);
-	
-	var _LocalChatMessage2 = _interopRequireDefault(_LocalChatMessage);
-	
-	var _LocalChatMessagePropType = __webpack_require__(183);
-	
-	var _LocalChatMessagePropType2 = _interopRequireDefault(_LocalChatMessagePropType);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var LocalChatMessagesContent = _react2.default.createClass({
-	  displayName: 'LocalChatMessagesContent',
-	
-	  propTypes: {
-	    messages: _react.PropTypes.arrayOf(_LocalChatMessagePropType2.default).isRequired
-	  },
-	
-	  render: function render() {
-	    var messages = this.props.messages.map(function (message, index) {
-	      return _react2.default.createElement(_LocalChatMessage2.default, { message: message, key: index });
-	    });
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'messages-content' },
-	      messages
-	    );
-	  }
-	});
-	
-	module.exports = LocalChatMessagesContent;
-
-/***/ },
 /* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32433,7 +32477,54 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _classNames = __webpack_require__(182);
+	var _LocalChatMessage = __webpack_require__(182);
+	
+	var _LocalChatMessage2 = _interopRequireDefault(_LocalChatMessage);
+	
+	var _LocalChatMessagePropType = __webpack_require__(184);
+	
+	var _LocalChatMessagePropType2 = _interopRequireDefault(_LocalChatMessagePropType);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LocalChatMessagesContent = _react2.default.createClass({
+	  displayName: 'LocalChatMessagesContent',
+	
+	  propTypes: {
+	    messages: _react.PropTypes.arrayOf(_LocalChatMessagePropType2.default).isRequired
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var messages = this.props.messages.map(function (message, index) {
+	      return _react2.default.createElement(_LocalChatMessage2.default, { message: message, key: index, loadWebview: _this.props.loadWebview });
+	    });
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'messages-content' },
+	      messages
+	    );
+	  }
+	});
+	
+	module.exports = LocalChatMessagesContent;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(173);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(13);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _classNames = __webpack_require__(183);
 	
 	var _classNames2 = _interopRequireDefault(_classNames);
 	
@@ -32441,11 +32532,11 @@
 	
 	var _LocalChatStore2 = _interopRequireDefault(_LocalChatStore);
 	
-	var _LocalChatMessagePropType = __webpack_require__(183);
+	var _LocalChatMessagePropType = __webpack_require__(184);
 	
 	var _LocalChatMessagePropType2 = _interopRequireDefault(_LocalChatMessagePropType);
 	
-	var _invariant = __webpack_require__(184);
+	var _invariant = __webpack_require__(185);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -32539,7 +32630,7 @@
 	  },
 	  _clickButton: function _clickButton(button) {
 	    if (button.type === 'web_url') {
-	      return;
+	      this.props.loadWebview(button.url);
 	    }
 	    _LocalChatStore2.default.sendPostbackForUser(this.context.userID, button.payload);
 	  }
@@ -32548,7 +32639,7 @@
 	module.exports = LocalChatMessage;
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -32602,7 +32693,7 @@
 
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32678,7 +32769,7 @@
 	module.exports = LocalChatMessagePropType;
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32736,7 +32827,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32749,11 +32840,11 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _classNames = __webpack_require__(182);
+	var _classNames = __webpack_require__(183);
 	
 	var _classNames2 = _interopRequireDefault(_classNames);
 	
-	var _LocalChatMessagePropType = __webpack_require__(183);
+	var _LocalChatMessagePropType = __webpack_require__(184);
 	
 	var _LocalChatMessagePropType2 = _interopRequireDefault(_LocalChatMessagePropType);
 	
@@ -32819,7 +32910,7 @@
 	module.exports = LocalChatMessagesQuickReply;
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32832,69 +32923,84 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _LocalChatStore = __webpack_require__(2);
+	var _classNames = __webpack_require__(183);
 	
-	var _LocalChatStore2 = _interopRequireDefault(_LocalChatStore);
+	var _classNames2 = _interopRequireDefault(_classNames);
+	
+	var _invariant = __webpack_require__(185);
+	
+	var _invariant2 = _interopRequireDefault(_invariant);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var LocalChatOptin = _react2.default.createClass({
-	  displayName: 'LocalChatOptin',
-	
-	  propTypes: {
-	    userID: _react.PropTypes.string.isRequired
-	  },
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      val: ''
-	    };
-	  },
+	var LocalChatWebview = _react2.default.createClass({
+	  displayName: 'LocalChatWebview',
 	  render: function render() {
+	    var _this = this;
+	
+	    var webviewClassName = 'webview-container';
+	    if (this.props.hide) {
+	      webviewClassName += ' hidden';
+	    }
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'chat-optin' },
+	      { className: webviewClassName },
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'input-group' },
-	        _react2.default.createElement('input', {
-	          ref: 'passThroughParam',
-	          type: 'text',
-	          value: this.state.val,
-	          className: 'form-control input-sm',
-	          placeholder: 'PASS_THROUGH_PARAM',
-	          onChange: this._onChange
-	        }),
+	        { className: 'webview-header' },
 	        _react2.default.createElement(
 	          'span',
-	          { className: 'input-group-btn' },
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'btn btn-primary btn-sm',
-	              onClick: this._onAuthenticate },
-	            'Authenticate'
-	          )
+	          { onClick: this.props.closeWebview },
+	          '✖'
 	        )
-	      )
+	      ),
+	      _react2.default.createElement('iframe', {
+	        src: this.props.webviewURL,
+	        ref: function ref(iframe) {
+	          return _this.webviewIframe = iframe;
+	        } })
 	    );
-	  },
-	  _onChange: function _onChange() {
-	    this.setState({
-	      val: this.refs.passThroughParam.value
-	    });
-	  },
-	  _onAuthenticate: function _onAuthenticate() {
-	    var param = this.refs.passThroughParam.value;
-	    if (param === '') {
-	      return;
-	    }
-	    _LocalChatStore2.default.sendOptinForUser(this.props.userID, param);
-	    this.setState({ val: '' });
 	  }
 	});
 	
-	module.exports = LocalChatOptin;
+	module.exports = LocalChatWebview;
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(173);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(13);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _classNames = __webpack_require__(183);
+	
+	var _classNames2 = _interopRequireDefault(_classNames);
+	
+	var _invariant = __webpack_require__(185);
+	
+	var _invariant2 = _interopRequireDefault(_invariant);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LocalChatWebviewOverlay = _react2.default.createClass({
+	  displayName: 'LocalChatWebviewOverlay',
+	  render: function render() {
+	    var webviewClassName = 'webview-overlay';
+	    if (this.props.hide) {
+	      webviewClassName += ' hidden';
+	    }
+	    return _react2.default.createElement('div', { className: webviewClassName });
+	  }
+	});
+	
+	module.exports = LocalChatWebviewOverlay;
 
 /***/ }
 /******/ ]);
