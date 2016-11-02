@@ -2,10 +2,6 @@ body {
   padding-top: 50px;
 }
 
-.hidden {
-  display: none;
-}
-
 .fb-local-chat-container {
   margin-top: 50px;
 }
@@ -19,22 +15,33 @@ body {
   position: absolute;
   z-index: 2;
   width: 100%;
-  height: 75%;
+  height: 100%;
   bottom: 0;
+  background: rgba(0,0,0,0.7);
 }
 
-.fb-local-chat-container .webview-container iframe{
-  width: 100%;
-  height: 100%;
-}
-
-.fb-local-chat-container .webview-overlay {
+.fb-local-chat-container .webview {
   position: absolute;
-  background: black;
-  opacity: 0.7;
   width: 100%;
+  bottom: 0;
+  background: black;
+}
+
+.fb-local-chat-container .webview-compact {
+  height: 50%;
+}
+
+.fb-local-chat-container .webview-tall {
+  height: 75%;
+}
+
+.fb-local-chat-container .webview-full {
   height: 100%;
-  z-index: 1;
+}
+
+.fb-local-chat-container .webview-container iframe {
+  width: 100%;
+  height: 93%;
 }
 
 .fb-local-chat-container .webview-header {
@@ -42,6 +49,7 @@ body {
   font-size: 20px;
   cursor: pointer;
   padding-left: 5px;
+  height: 7%;
 }
 
 .fb-local-chat-container .chat-content-container {

@@ -8,13 +8,21 @@ import EventStore from './EventStore.js';
 const POLLING_INTERVAL = 1500;
 const BASE_URL = '';
 
+type WebViewHeightRatio = 'compact' | 'tall' | 'full';
+
 class LocalChatStore extends EventStore {
   _userIDToMessagesMap: Object;
   _baseURL: string;
+  _webViewURL: string;
+  _openWebView: boolean;
+  _webViewHeightRatio: WebViewHeightRatio;
 
   constructor() {
     super();
     this._userIDToMessagesMap = {};
+    this._webViewURL = '';
+    this._openWebView = false;
+    this._webViewHeightRatio = 'compact';
   }
 
   setBaseUrl(baseURL: string) {
@@ -36,6 +44,18 @@ class LocalChatStore extends EventStore {
       });
   }
 
+  openWebView(url: string, heightRatio: WebViewHeightRatio): void {
+    this._webViewURL = url;
+    this._webViewHeightRatio = heightRatio;
+    this._openWebView = true;
+    this.emitChange();
+  }
+
+  closeWebView(): void {
+    this._openWebView = false;
+    this.emitChange();
+  }
+
   sendOptinForUser(senderID: string, param: string): void {
     const url = this._baseURL + '/localChat/optin';
     $.post(url, {senderID: senderID, ref: param})
@@ -44,6 +64,14 @@ class LocalChatStore extends EventStore {
       .fail((res: Object) => {
         console.log(res);
       });
+  }
+
+  getWebViewState(): Object {
+    return {
+      openWebView: this._openWebView,
+      webViewHeightRatio: this._webViewHeightRatio,
+      webViewURL: this._webViewURL,
+    };
   }
 
   getMessagesForUser(userID: string): Array<Object> {
@@ -56,8 +84,6 @@ class LocalChatStore extends EventStore {
   sendMessageForUser(senderID: string, message: string): void {
     const url = this._baseURL + '/localChat/sendMessage';
     $.post(url, {senderID: senderID, message: message})
-      .done((res: Object) => {
-      })
       .fail((res: Object) => {
         console.log(res);
       });
@@ -66,22 +92,16 @@ class LocalChatStore extends EventStore {
   sendPostbackForUser(senderID: string, payload: string): void {
     const url = this._baseURL + '/localChat/postback';
     $.post(url, {senderID: senderID, payload: payload})
-      .done((res: Object) => {
-
-      })
       .fail((res: Object) => {
-
+        console.log(res);
       });
   }
 
   sendQuickReplyForUser(senderID: string, text: string, payload: string): void {
     const url = this._baseURL + '/localChat/quickReply';
     $.post(url, {senderID: senderID, text: text, payload: payload})
-      .done((res: Object) => {
-
-      })
       .fail((res: Object) => {
-
+        console.log(res);
       });
   }
 }

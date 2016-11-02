@@ -14,7 +14,6 @@
     "watch": "babel --watch=./src --out-dir=./build --source-maps inline --copy-files",
     "build": "babel ./src --out-dir=./build --source-maps inline --copy-files",
     "web_watch": "webpack --watch --watch-polling --config ./localChatWeb/js/webpack.config.js",
-    "s": "nodemon build/app.js --watch build",
     "test": "mocha ./build/test",
     "lint": "eslint src --fix",
     "check": "npm run lint && npm run flow && npm run test",

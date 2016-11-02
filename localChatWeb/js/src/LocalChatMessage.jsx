@@ -64,8 +64,15 @@ const LocalChatMessage = React.createClass({
 
   _renderButtonTemplate(): React.Element {
     const message = this.props.message;
-    const buttons = message.attachment.payload.buttons.map(button => {
-      return this._renderButton(button);
+    const buttons = message.attachment.payload.buttons.map((button, index) => {
+      return (
+        <button
+          onClick={() => this._clickButton(button)}
+          className="list-group-item chat-button"
+          key={index}>
+          {button.title}
+        </button>
+      );
     });
     return (
       <span>
@@ -74,14 +81,6 @@ const LocalChatMessage = React.createClass({
           {buttons}
         </div>
       </span>
-    );
-  },
-
-  _renderButton(button: Object): React.Element {
-    return (
-      <button onClick={() => this._clickButton(button)} className="list-group-item chat-button">
-        {button.title}
-      </button>
     );
   },
 
@@ -94,7 +93,8 @@ const LocalChatMessage = React.createClass({
 
   _clickButton(button: Object): void {
     if (button.type === 'web_url') {
-      this.props.loadWebview(button.url);
+      LocalChatStore.openWebView(button.url, button.webview_height_ratio);
+      return;
     }
     LocalChatStore.sendPostbackForUser(this.context.userID, button.payload);
   },

@@ -6,29 +6,36 @@
 
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import LocalChatStore from './LocalChatStore.js';
 import classNames from 'classNames';
 
-import invariant from 'invariant';
-
 const LocalChatWebview = React.createClass({
+  propTypes: {
+    webViewURL: PropTypes.string.isRequired,
+    webViewHeightRatio: PropTypes.oneOf(['tall', 'compact', 'full']),
+  },
 
   render(): React.Element {
-    let webviewClassName = 'webview-container';
-    if(this.props.hide) {
-      webviewClassName += ' hidden';
-    }
+
+    const heightStyle = 'webview-' + this.props.webViewHeightRatio;
     return (
-      <div className={webviewClassName}>
-        <div className='webview-header'>
-          <span onClick={this.props.closeWebview}>✖</span>
+      <div className={'webview-container'}>
+        <div className={classNames('webview', heightStyle)}>
+          <div className='webview-header'>
+            <span onClick={this._handleCloseWebView}>✖</span>
+          </div>
+          <iframe
+            src={this.props.webViewURL}
+            ref={ (iframe) => this._webviewIframe = iframe } >
+          </iframe>
         </div>
-        <iframe
-          src={this.props.webviewURL}
-          ref={ (iframe) => this.webviewIframe = iframe } >
-        </iframe>
       </div>
     );
   },
+
+  _handleCloseWebView(): void {
+    LocalChatStore.closeWebView();
+  }
 });
 
 module.exports = LocalChatWebview;

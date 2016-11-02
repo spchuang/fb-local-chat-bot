@@ -17,7 +17,7 @@ const LocalChatMessagesContent = React.createClass({
   render(): React.Element {
     const messages = this.props.messages.map((message, index) => {
       return (
-        <LocalChatMessage message={message} key={index} loadWebview={this.props.loadWebview}/>
+        <LocalChatMessage message={message} key={index}/>
       );
     })
     return (

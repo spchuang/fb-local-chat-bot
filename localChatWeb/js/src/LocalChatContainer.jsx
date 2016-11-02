@@ -11,7 +11,6 @@ import LocalChatFooter from './LocalChatFooter.jsx';
 import LocalChatMessagesContent from './LocalChatMessagesContent.jsx';
 import LocalChatMessagesQuickReply from './LocalChatMessagesQuickReply.jsx';
 import LocalChatWebview from './LocalChatWebview.jsx';
-import LocalChatWebviewOverlay from './LocalChatWebviewOverlay.jsx';
 
 const LocalChatContainer = React.createClass({
   propTypes: {
@@ -22,8 +21,9 @@ const LocalChatContainer = React.createClass({
     return {
       userID: this.props.userID,
       messages: LocalChatStore.getMessagesForUser(this.props.userID),
-      webviewURL: "",
-      hideWebview: true,
+      webViewURL: '',
+      openWebView: false,
+      webViewHeightRatio: '',
     }
   },
 
@@ -43,7 +43,14 @@ const LocalChatContainer = React.createClass({
 
   render(): React.Element {
     const messages = this.state.messages;
-    console.log(messages);
+
+    const webView = this.state.openWebView
+      ? <LocalChatWebview
+          webViewURL={this.state.webViewURL}
+          webViewHeightRatio={this.state.webViewHeightRatio}
+        />
+      : null;
+
     return (
       <div className='fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3'>
         <div className="panel panel-default">
@@ -53,12 +60,8 @@ const LocalChatContainer = React.createClass({
             </LocalChatOptin>
           </div>
           <div className="chat-content-container">
-            <LocalChatWebviewOverlay hide={this.state.hideWebview}/>
-            <LocalChatWebview
-              webviewURL={this.state.webviewURL}
-              hide={this.state.hideWebview}
-              closeWebview={this._closeWebview} />
-            <LocalChatMessagesContent messages={messages} loadWebview={this._loadWebview}/>
+            {webView}
+            <LocalChatMessagesContent messages={messages}/>
             <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
             <div className="panel-footer">
               <LocalChatFooter userID={this.state.userID}>
@@ -77,6 +80,9 @@ const LocalChatContainer = React.createClass({
         messages: newMessages,
       });
     }
+
+    // set webview config
+    this.setState(LocalChatStore.getWebViewState());
   },
 
   _loadWebview(url: string): void {
@@ -87,7 +93,6 @@ const LocalChatContainer = React.createClass({
   },
 
   _closeWebview(): void {
-    console.log('clicked');
     this.setState( {
       webviewURL: '',
       hideWebview: true,

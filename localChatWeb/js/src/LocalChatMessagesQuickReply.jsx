@@ -11,7 +11,7 @@ import LocalChatStore from './LocalChatStore.js';
 
 const LocalChatMessagesQuickReply = React.createClass({
   propTypes: {
-    message: LocalChatMessagePropType.isRequired,
+    message: LocalChatMessagePropType,
   },
 
   contextTypes: {
