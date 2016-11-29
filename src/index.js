@@ -26,14 +26,14 @@ import type {
   Attachment,
   Button,
   Message,
+  WebviewHeightRatio,
 } from './type';
-
-type webURLHeight = 'compact' | 'tall' | 'full';
 
 class Bot extends EventEmitter {
   _token: string;
   _verifyToken: string;
   _useLocalChat: boolean;
+  _useMessenger: boolean;
   _init: boolean;
 
   _verifyInitOrThrow(): void {
@@ -49,10 +49,16 @@ class Bot extends EventEmitter {
     this._init = false;
   }
 
-  init(token: string, verfyToken: string, useLocalChat: boolean): void {
+  init(
+    token: string,
+    verfyToken: string,
+    useLocalChat: boolean = false,
+    useMessenger: boolean = true,
+  ): void {
     this._token = token;
     this._verifyToken = verfyToken;
     this._useLocalChat = useLocalChat;
+    this._useMessenger = useMessenger;
     this._init = true;
   }
 
@@ -130,6 +136,7 @@ class Bot extends EventEmitter {
       this._token,
       messageData,
       this._useLocalChat,
+      this._useMessenger,
     );
   }
 
@@ -261,7 +268,7 @@ class Bot extends EventEmitter {
   createURLButton(
     text: string,
     url: string,
-    height?: webURLHeight = 'full',
+    height?: WebviewHeightRatio = 'full',
     useMessengerExtensions?: boolean = false,
     fallbackUrl?: string,
   ): URLButton {

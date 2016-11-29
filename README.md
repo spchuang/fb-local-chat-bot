@@ -5,7 +5,7 @@ Testing your Messenger Bot apps is a pain in the ass - you need to setup ngrok t
 fb-local-chat-bot is
 - a standard library that handles the boilerplate logic to connect with FB APIs
 - a local web client to debug the app (see screenshot)
--  a set of intuitive APIs for unit testing on messenger bot
+- a set of intuitive APIs for unit testing on messenger bot
 
 # Demo
 ![](https://github.com/spchuang/fb-local-chat-bot/blob/master/screenshot.gif)
@@ -20,9 +20,12 @@ npm install fb-local-chat-bot
 ## Initialize
 ```
 // app.js
+// if useMessenger is false, the plugin will not make graphAPI calls to facebook
+// if useLocalChat is true, the plugin will initialize the local chat view.
 Bot.init(
   config.FBChatToken || '',
   'SETUP_PLAY_GO_THIS_IS_RIGHT',
+  false, // useMessenger
   config.useFBChatLocalTest || false,
 );
 
@@ -51,7 +54,7 @@ Bot.send(userID, messageData);
 Bot.sendText(userID, "Yo what's up how you doin");
 
 // send image
-Bot.sendText(userID, imageURL);
+Bot.sendImage(userID, imageURL);
 
 // send buttons
 Bot.sendButtons(
@@ -68,6 +71,14 @@ Bot.sendButtons(
     ),
   ]
 );
+// Other APIs (see src/index.js for detail)
+// Bot.sendVideo
+// Bot.sendFile
+// Bot.sendAudio
+// Bot.sendGenericTemplate
+// Bot.sendListTemplate
+// Bot.sendQuickReplyWithAttachment
+// Bot.sendQuickReplyWithText
 ```
 
 ## Testing APIs

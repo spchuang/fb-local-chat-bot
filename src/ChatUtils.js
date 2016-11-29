@@ -26,29 +26,31 @@ const ChatUtils = {
     token: string,
     messageData: Object,
     useLocalChat: boolean,
-  ): Promise {
-    // Use the local chat interface instead of making GraphAPI call
+    useMessenger: boolean,
+  ): ?Promise {
     if (useLocalChat) {
       _saveMessageToLocalChat(recipientID, messageData, false /* fromUser */);
-      return;
     }
 
-    return rp({
-      uri: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token:token},
-      method: 'POST',
-      body: {
-        recipient: {id: recipientID},
-        message: messageData,
-      },
-      json: true,
-    }, function(err, response) {
-      if (err) {
-        // TODO
-      } else if (response.body.error) {
-        // TODO
-      }
-    });
+    if (useMessenger) {
+      return rp({
+        uri: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:token},
+        method: 'POST',
+        body: {
+          recipient: {id: recipientID},
+          message: messageData,
+        },
+        json: true,
+      }, function(err, response) {
+        if (err) {
+          // TODO
+        } else if (response.body.error) {
+          // TODO
+        }
+      });
+    }
+    return;
   },
 
   getLocalChatMessages(): Object {
