@@ -29,7 +29,7 @@ const ChatUtils = {
     useMessenger: boolean,
   ): ?Promise {
     if (useLocalChat) {
-      _saveMessageToLocalChat(recipientID, messageData, false /* fromUser */);
+      _saveMessageToLocalChat(recipientID, Object.assign({}, messageData), false /* fromUser */);
     }
 
     if (useMessenger) {
