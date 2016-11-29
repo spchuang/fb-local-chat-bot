@@ -65,6 +65,9 @@ const LocalChatMessage = React.createClass({
   _renderButtonTemplate(): React.Element {
     const message = this.props.message;
     const buttons = message.attachment.payload.buttons.map((button, index) => {
+      if (button.type === 'element_share') {
+        button.title = 'Share';
+      }
       return (
         <button
           onClick={() => this._clickButton(button)}
@@ -92,11 +95,20 @@ const LocalChatMessage = React.createClass({
   },
 
   _clickButton(button: Object): void {
-    if (button.type === 'web_url') {
-      LocalChatStore.openWebView(button.url, button.webview_height_ratio);
-      return;
+    switch (button.type) {
+      case 'web_url':
+        LocalChatStore.openWebView(button.url, button.webview_height_ratio);
+        break;
+      case 'postback':
+        LocalChatStore.sendPostbackForUser(this.context.userID, button.payload);
+        break;
+      case 'phone_number':
+        alert('calling number for: ' + button.payload);
+        break;
+      case 'element_share':
+        alert('Share!');
+        break;
     }
-    LocalChatStore.sendPostbackForUser(this.context.userID, button.payload);
   },
 });
 

@@ -32586,6 +32586,9 @@
 	
 	    var message = this.props.message;
 	    var buttons = message.attachment.payload.buttons.map(function (button, index) {
+	      if (button.type === 'element_share') {
+	        button.title = 'Share';
+	      }
 	      return _react2.default.createElement(
 	        'button',
 	        {
@@ -32613,11 +32616,20 @@
 	    return _react2.default.createElement('img', { src: message.attachment.payload.url });
 	  },
 	  _clickButton: function _clickButton(button) {
-	    if (button.type === 'web_url') {
-	      _LocalChatStore2.default.openWebView(button.url, button.webview_height_ratio);
-	      return;
+	    switch (button.type) {
+	      case 'web_url':
+	        _LocalChatStore2.default.openWebView(button.url, button.webview_height_ratio);
+	        break;
+	      case 'postback':
+	        _LocalChatStore2.default.sendPostbackForUser(this.context.userID, button.payload);
+	        break;
+	      case 'phone_number':
+	        alert('calling number for: ' + button.payload);
+	        break;
+	      case 'element_share':
+	        alert('Share!');
+	        break;
 	    }
-	    _LocalChatStore2.default.sendPostbackForUser(this.context.userID, button.payload);
 	  }
 	});
 	

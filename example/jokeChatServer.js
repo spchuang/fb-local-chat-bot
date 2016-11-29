@@ -10,6 +10,7 @@ const PostBackTypes = {
   TELL_ANOTHER_JOKE: 'TELL_ANOTHER_JOKE',
   LIST_JOKES: 'LIST_JOKES',
   TELL_RIDDLE: 'TELL_RIDDLE',
+  MORE_BUTTONS: 'MORE_BUTTONS',
 };
 const QuickReplyTypes = {
   TELL_JOKE: 'TELL_JOKE',
@@ -32,7 +33,8 @@ function makeServer() {
         Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
         Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES),
         Bot.createPostbackButton('Solve a riddle', PostBackTypes.TELL_RIDDLE),
-        Bot.createWebviewButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
+        Bot.createURLButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
+        Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
       ]
     );
   });
@@ -69,6 +71,16 @@ function makeServer() {
             Bot.createQuickReply('91', QuickReplyTypes.WRONG_ANSWER),
           ]
         )
+        break;
+      case PostBackTypes.MORE_BUTTONS:
+        Bot.sendButtons(
+          senderID,
+          'More buttons?',
+          [
+            Bot.createCallButton('Call Sam', '+12345678'),
+            Bot.createShareButton(),
+          ]
+        );
     }
   });
 
