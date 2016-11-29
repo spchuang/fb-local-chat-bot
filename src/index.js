@@ -9,6 +9,27 @@ import {Router} from 'express';
 import Promise from 'bluebird';
 import invariant from 'invariant';
 
+import type {
+  MultimediaAttachment,
+  ButtonTemplateAttachment,
+  GenericTemplateAttachmentElement,
+  GenericTemplateAttachment,
+  ListTemplateAttachmentElement,
+  ListTemplateAttachment,
+  QuickReply,
+  URLButton,
+  PostbackButton,
+  CallButton,
+  ShareButton,
+  TextQuickReply,
+  LocationQuickReply,
+  Attachment,
+  Button,
+  Message,
+} from './type';
+
+type webURLHeight = 'compact' | 'tall' | 'full';
+
 class Bot extends EventEmitter {
   _token: string;
   _verifyToken: string;
@@ -102,7 +123,7 @@ class Bot extends EventEmitter {
   /**
    * send APIs
    */
-  send(recipientID: string, messageData: Object): Promise {
+  send(recipientID: string, messageData: Message): Promise {
     this._verifyInitOrThrow();
     return ChatUtils.send(
       recipientID,
@@ -110,38 +131,79 @@ class Bot extends EventEmitter {
       messageData,
       this._useLocalChat,
     );
-   }
-
-  sendImage(recipientID: string, imageURL: string): Promise {
-    return this.send(recipientID, {'attachment': this.createImageAttachment(imageURL)});
   }
 
   sendText(recipientID: string, text: string): Promise {
-    const messageData = {
-      text:text,
-    };
-    return this.send(recipientID, messageData);
-   }
+    return this.send(recipientID, {text: text});
+  }
 
-  sendButtons(recipientID: string, text: string, buttonList: Array<Object>): Promise {
-    const messageData = {
-      'attachment': {
-        'type':'template',
-        'payload': {
-          'template_type': 'button',
-          'text': text,
-          'buttons': buttonList,
-        },
+  sendAttachment(recipientID: string, attachment: Attachment): Promise {
+    return this.send(recipientID, {'attachment': attachment});
+  }
+
+  sendImage(recipientID: string, url: string): Promise {
+    return this.sendAttachment(recipientID,this.createImageAttachment(url));
+  }
+
+  sendVideo(recipientID: string, url: string): Promise {
+    return this.sendAttachment(recipientID, this.createVideoAttachment(url));
+  }
+
+  sendFile(recipientID: string, url: string): Promise {
+    return this.sendAttachment(recipientID, this.createFileAttachment(url));
+  }
+
+  sendAudio(recipientID: string, url: string): Promise {
+    return this.sendAttachment(recipientID, this.createAudioAttachment(url));
+  }
+
+  sendButtons(recipientID: string, text: string, buttons: Array<Button>): Promise {
+    const attachment: ButtonTemplateAttachment = {
+      'type':'template',
+      'payload': {
+        'template_type': 'button',
+        'text': text,
+        'buttons': buttons,
       },
     };
-    return this.send(recipientID, messageData);
+    return this.sendAttachment(recipientID, attachment);
   }
 
-  sendTemplate(): void {
-   // TODO
+  sendGenericTemplate(recipientID: string, elements: Array<GenericTemplateAttachmentElement>): void {
+    const attachment: GenericTemplateAttachment = {
+      'type':'template',
+      'payload': {
+        'template_type': 'generic',
+        'elements': elements,
+      },
+    };
+    return this.sendAttachment(recipientID, attachment);
   }
 
-  sendQuickReplyWithAttachment(recipientID: string, attachment: Object, quickReplyList: Array<Object>): Promise {
+  sendListTemplate(
+    recipientID: string,
+    elements: Array<ListTemplateAttachmentElement>,
+    topElementStyle?: 'large' | 'compact',
+    buttons?: Array<Button>
+  ): void {
+    const attachment: ListTemplateAttachment = {
+      'type':'template',
+      'payload': {
+        'template_type': 'list',
+        'elements': elements,
+      },
+    };
+
+    if (topElementStyle) {
+      attachment.payload.top_element_style = topElementStyle;
+    }
+    if (buttons) {
+      attachment.payload.buttons = buttons;
+    }
+    return this.sendAttachment(recipientID, attachment);
+  }
+
+  sendQuickReplyWithAttachment(recipientID: string, attachment: Object, quickReplyList: Array<QuickReply>): Promise {
     const messageData = {
       'attachment': attachment,
       'quick_replies': quickReplyList,
@@ -149,7 +211,7 @@ class Bot extends EventEmitter {
     return this.send(recipientID, messageData);
   }
 
-  sendQuickReplyWithText(recipientID: string, text: string, quickReplyList: Array<Object>): Promise {
+  sendQuickReplyWithText(recipientID: string, text: string, quickReplyList: Array<QuickReply>): Promise {
     const messageData = {
       'text': text,
       'quick_replies': quickReplyList,
@@ -157,7 +219,10 @@ class Bot extends EventEmitter {
     return this.send(recipientID, messageData);
   }
 
-  createQuickReply(text: string, payload: string): Object {
+  /*
+   * Helpers to create attachment
+   */
+  createQuickReply(text: string, payload: string): TextQuickReply {
     return {
       'content_type': 'text',
       'title': text,
@@ -165,7 +230,21 @@ class Bot extends EventEmitter {
     };
   }
 
-  createPostbackButton(text: string, payload: string): Object {
+  createLocationQuickReplay(): LocationQuickReply {
+    return {
+      content_type: 'location',
+    };
+  }
+
+  createCallButton(text: string, payload: string): CallButton {
+    return {
+      'type': 'phone_number',
+      'title': text,
+      'payload': payload,
+    };
+  }
+
+  createPostbackButton(text: string, payload: string): PostbackButton {
     return {
       'type': 'postback',
       'title': text,
@@ -173,44 +252,92 @@ class Bot extends EventEmitter {
     };
   }
 
-  createWebButton(text: string, url: string): Object {
+  createShareButton(): ShareButton {
     return {
-      'type': 'web_url',
-      'url': url,
-      'title': text,
+      'type': 'element_share',
     };
   }
 
-  /**
-   * For 'height' parameter, use 'compact' (1/2 screen), 'tall' (3/4 screen) or 'full'
-   */
-  createWebviewButton(text: string, url: string, height: string): Object {
+  createURLButton(
+    text: string,
+    url: string,
+    height?: webURLHeight = 'full',
+    useMessengerExtensions?: boolean = false,
+    fallbackUrl?: string,
+  ): URLButton {
     return {
       'type': 'web_url',
       'url': url,
       'title': text,
       'webview_height_ratio': height,
-    }
+      'messenger_extensions': useMessengerExtensions,
+      'fallback_url': fallbackUrl,
+    };
   }
 
-  /**
-   * To use this and enable extension, make sure to whitelist your domain and make sure it's https
-   */
-  createWebviewButtonWithExtension(text: string, url: string, height: string): Object {
-    return {
-      'type': 'web_url',
-      'url': url,
-      'title': text,
-      'webview_height_ratio': height,
-      "messenger_extensions": true,
+  createGenericTemplateElement(
+    title: string,
+    itemUrl: ?string,
+    defaultAction: ?Object,
+    imageUrl: ?string,
+    subtitle: ?string,
+    buttons: ?Array<Object>,
+  ): GenericTemplateAttachmentElement {
+    invariant(!(itemUrl && defaultAction), 'One element cannot have both default_action and item_url');
+    const val: GenericTemplateAttachmentElement = {
+      'title': title,
+    };
+
+    if (itemUrl) {
+      val.item_url = itemUrl;
     }
+    if (defaultAction) {
+      val.default_action = defaultAction;
+    }
+    if (imageUrl) {
+      val.image_url = imageUrl;
+    }
+    if (subtitle) {
+      val.subtitle = subtitle;
+    }
+    if (buttons) {
+      val.buttons = buttons;
+    }
+    return val;
   }
 
-  createImageAttachment(imageURL: string): Object {
+  createImageAttachment(url: string): MultimediaAttachment {
     return {
       'type': 'image',
       'payload': {
-        'url': imageURL,
+        'url': url,
+      },
+    };
+  }
+
+  createVideoAttachment(url: string): MultimediaAttachment {
+    return {
+      'type': 'video',
+      'payload': {
+        'url': url,
+      },
+    };
+  }
+
+  createFileAttachment(url: string): MultimediaAttachment {
+    return {
+      'type': 'file',
+      'payload': {
+        'url': url,
+      },
+    };
+  }
+
+  createAudioAttachment(url: string): MultimediaAttachment {
+    return {
+      'type': 'audio',
+      'payload': {
+        'url': url,
       },
     };
   }

@@ -32713,12 +32713,34 @@
 	  fromUser: _react.PropTypes.bool.isRequired
 	});
 	
-	var ButtonPropType = _react.PropTypes.shape({
-	  type: _react.PropTypes.oneOf(['web_url', 'postback']).isRequired,
-	  url: _react.PropTypes.string,
+	/*
+	 * Button Template
+	 * ref: https://developers.facebook.com/docs/messenger-platform/send-api-reference/buttons
+	 */
+	var URLButtonPropType = _react.PropTypes.shape({
+	  type: _react.PropTypes.oneOf(['web_url']).isRequired,
+	  url: _react.PropTypes.string.isRequired,
 	  title: _react.PropTypes.string.isRequired,
-	  payload: _react.PropTypes.string
+	  webview_height_ratio: _react.PropTypes.oneOf(['compact', 'tall', 'full'])
 	});
+	
+	var PostbackButtonPropType = _react.PropTypes.shape({
+	  type: _react.PropTypes.oneOf(['postback']).isRequired,
+	  title: _react.PropTypes.string.isRequired,
+	  payload: _react.PropTypes.string.isRequired
+	});
+	
+	var CallButtonPropType = _react.PropTypes.shape({
+	  type: _react.PropTypes.oneOf(['phone_number']).isRequired,
+	  title: _react.PropTypes.string.isRequired,
+	  payload: _react.PropTypes.string.isRequired
+	});
+	
+	var ShareButtonPropType = _react.PropTypes.shape({
+	  type: _react.PropTypes.oneOf(['element_share']).isRequired
+	});
+	
+	var ButtonPropType = _react.PropTypes.oneOfType([URLButtonPropType, PostbackButtonPropType, CallButtonPropType, ShareButtonPropType]);
 	
 	var ButtonsTemplateMessagePropType = _react.PropTypes.shape({
 	  text: _react.PropTypes.string,
@@ -32726,8 +32748,8 @@
 	    type: _react.PropTypes.oneOf(['template']).isRequired,
 	    payload: _react.PropTypes.shape({
 	      "template_type": _react.PropTypes.oneOf(['button']).isRequired,
-	      "text": _react.PropTypes.string,
-	      "buttons": _react.PropTypes.arrayOf(ButtonPropType)
+	      "text": _react.PropTypes.string.isRequired,
+	      "buttons": _react.PropTypes.arrayOf(ButtonPropType).isRequired
 	    }).isRequired
 	  }),
 	  fromUser: _react.PropTypes.bool.isRequired
