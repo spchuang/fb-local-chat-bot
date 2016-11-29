@@ -8,6 +8,7 @@ import FBLocalChatRoutes from './FBLocalChatRoutes';
 import {Router} from 'express';
 import Promise from 'bluebird';
 import invariant from 'invariant';
+import rp from 'request-promise';
 
 import type {
   MultimediaAttachment,
@@ -86,9 +87,15 @@ class Bot extends EventEmitter {
     return router;
   }
 
-  getUserProfile(): Promise<Object> {
+  getUserProfile(id: string): Promise<Object> {
     this._verifyInitOrThrow();
-    // TODO
+    return rp({
+      uri: 'https://graph.facebook.com/v2.6/' + id,
+      qs: {
+        access_token: this._token,
+        fields: 'first_name,last_name,profile_pic,locale,timezone,gender',
+      },
+    });
   }
 
   handleMessage(data: Object): void {

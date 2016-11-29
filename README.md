@@ -107,3 +107,9 @@ describe('Basic server test', function() {
 });
 
 ```
+
+## History
+- 0.1.0
+   - add `useMessenger` param
+   - add QuickReply, ListTemplate, GenericTemplate and various buttons
+   - Add profile fetching API
