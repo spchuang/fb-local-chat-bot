@@ -95,6 +95,7 @@ class Bot extends EventEmitter {
         access_token: this._token,
         fields: 'first_name,last_name,profile_pic,locale,timezone,gender',
       },
+      json: true,
     });
   }
 
@@ -183,7 +184,7 @@ class Bot extends EventEmitter {
     return this.sendAttachment(recipientID, attachment);
   }
 
-  sendGenericTemplate(recipientID: string, elements: Array<GenericTemplateAttachmentElement>): void {
+  sendGenericTemplate(recipientID: string, elements: Array<GenericTemplateAttachmentElement>): Promise {
     const attachment: GenericTemplateAttachment = {
       'type':'template',
       'payload': {
@@ -199,7 +200,7 @@ class Bot extends EventEmitter {
     elements: Array<ListTemplateAttachmentElement>,
     topElementStyle?: 'large' | 'compact',
     buttons?: Array<Button>
-  ): void {
+  ): Promise {
     const attachment: ListTemplateAttachment = {
       'type':'template',
       'payload': {
