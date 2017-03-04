@@ -32528,6 +32528,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var HSCROLL_ELEMENT_WIDHT = 300;
+	
 	var LocalChatMessage = _react2.default.createClass({
 	  displayName: 'LocalChatMessage',
 	
@@ -32549,6 +32551,8 @@
 	    } else if (message.attachment.type === 'image') {
 	      bubble = this._renderImage();
 	      useBubble = false;
+	    } else if (message.attachment.type === 'template' && message.attachment.payload.template_type === 'generic') {
+	      bubble = this._renderGenericTemplate();
 	    } else if (message.attachment.type === 'template' && message.attachment.payload.template_type === 'button') {
 	      bubble = this._renderButtonTemplate();
 	    } else {
@@ -32581,24 +32585,43 @@
 	      message.text
 	    );
 	  },
-	  _renderButtonTemplate: function _renderButtonTemplate() {
+	  _renderGenericTemplate: function _renderGenericTemplate() {
 	    var _this = this;
 	
 	    var message = this.props.message;
-	    var buttons = message.attachment.payload.buttons.map(function (button, index) {
-	      if (button.type === 'element_share') {
-	        button.title = 'Share';
-	      }
+	    var elements = message.attachment.payload.elements.map(function (element, index) {
+	      var buttons = element.buttons.map(function (button, index) {
+	        return _this._renderButton(button, index);
+	      });
 	      return _react2.default.createElement(
-	        'button',
-	        {
-	          onClick: function onClick() {
-	            return _this._clickButton(button);
-	          },
-	          className: 'list-group-item chat-button',
-	          key: index },
-	        button.title
+	        'div',
+	        { className: 'hscroll-element', style: { width: HSCROLL_ELEMENT_WIDHT } },
+	        _react2.default.createElement('img', { className: 'image', src: element.image_url }),
+	        _react2.default.createElement(
+	          'h4',
+	          { className: 'title' },
+	          element.title
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'subtitle' },
+	          element.subtitle
+	        ),
+	        buttons
 	      );
+	    });
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'hscroll-wrapper', style: { width: elements.length * (HSCROLL_ELEMENT_WIDHT + 10) } },
+	      elements
+	    );
+	  },
+	  _renderButtonTemplate: function _renderButtonTemplate() {
+	    var _this2 = this;
+	
+	    var message = this.props.message;
+	    var buttons = message.attachment.payload.buttons.map(function (button, index) {
+	      return _this2._renderButton(button, index);
 	    });
 	    return _react2.default.createElement(
 	      'span',
@@ -32609,6 +32632,23 @@
 	        { className: 'list-group chat-button-list' },
 	        buttons
 	      )
+	    );
+	  },
+	  _renderButton: function _renderButton(button, index) {
+	    var _this3 = this;
+	
+	    if (button.type === 'element_share') {
+	      button.title = 'Share';
+	    }
+	    return _react2.default.createElement(
+	      'button',
+	      {
+	        onClick: function onClick() {
+	          return _this3._clickButton(button);
+	        },
+	        className: 'list-group-item chat-button',
+	        key: index },
+	      button.title
 	    );
 	  },
 	  _renderImage: function _renderImage() {

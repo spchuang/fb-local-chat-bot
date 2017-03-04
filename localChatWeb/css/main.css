@@ -73,6 +73,7 @@ body {
   color: black;
   padding: 10px 20px;
   border-radius: 30px;
+  overflow-y: auto;
 }
 
 .fb-local-chat-container .messages-content .message-bubble.me {
@@ -115,6 +116,15 @@ body {
 
 .fb-local-chat-container .messages-content .message .chat-button-list .chat-button {
   text-align: center;
+}
+
+.fb-local-chat-container .messages-content .message .hscroll-wrapper {
+  overflow-x: auto;
+}
+
+.fb-local-chat-container .messages-content .message .hscroll-element {
+  float: left;
+  margin-right: 10px;
 }
 
 .clear {
