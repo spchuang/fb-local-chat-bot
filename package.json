@@ -17,6 +17,7 @@
     "test": "mocha ./build/test",
     "lint": "eslint src --fix",
     "check": "npm run lint && npm run flow && npm run test",
+    "s": "nodemon --harmony example/jokeChatApp.js --watch example",
     "joke": "node --harmony example/jokeChatApp.js",
     "test_joke": "mocha ./example/test --compilers js:babel-register"
   },
