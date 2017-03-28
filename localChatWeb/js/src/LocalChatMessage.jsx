@@ -25,7 +25,6 @@ const LocalChatMessage = React.createClass({
   },
 
   render(): React.Element {
-    console.log(this.props);
     const message = this.props.message;
 
     let bubble = null;

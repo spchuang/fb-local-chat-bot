@@ -5,6 +5,7 @@ import React from 'react';
 
 window.init = (baseURL: string) => {
   LocalChatStore.setBaseUrl(baseURL);
+  LocalChatStore._getPersistentMenu();
   LocalChatStore.startPolling();
 
   let ID = null;

@@ -16,6 +16,7 @@ class LocalChatStore extends EventStore {
   _webViewURL: string;
   _openWebView: boolean;
   _webViewHeightRatio: WebViewHeightRatio;
+  _persistentMenu: Array<Object>;
 
   constructor() {
     super();
@@ -23,6 +24,19 @@ class LocalChatStore extends EventStore {
     this._webViewURL = '';
     this._openWebView = false;
     this._webViewHeightRatio = 'compact';
+    this._persistentMenu = [];
+  }
+
+  _getPersistentMenu(): void {
+    const url = this._baseURL + '/localChat/persistentMenu';
+    $.get(url)
+      .done((res: Array<Object>) => {
+        this._persistentMenu = res;
+        this.emitChange();
+      })
+      .fail((res: Object) => {
+        console.log(res);
+      });
   }
 
   setBaseUrl(baseURL: string) {
@@ -72,6 +86,10 @@ class LocalChatStore extends EventStore {
       webViewHeightRatio: this._webViewHeightRatio,
       webViewURL: this._webViewURL,
     };
+  }
+
+  getPersistentMenu(): Array<Object> {
+    return this._persistentMenu;
   }
 
   getMessagesForUser(userID: string): Array<Object> {

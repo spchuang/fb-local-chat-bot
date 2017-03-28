@@ -6,11 +6,14 @@
 
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import LocalChatPersistentMenuButton from './LocalChatPersistentMenuButton.jsx';
 import LocalChatStore from './LocalChatStore.js';
 
 const LocalChatFooter = React.createClass({
+  _menuButton: null,
   propTypes: {
     userID: PropTypes.string.isRequired,
+    persistentMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
   },
 
   getInitialState(): Object {
@@ -20,9 +23,16 @@ const LocalChatFooter = React.createClass({
   },
 
   render(): React.Element {
+    const menu = this.props.persistentMenu.length > 0
+      ? <span className="input-group-btn">
+          <LocalChatPersistentMenuButton persistentMenu={this.props.persistentMenu}/>
+        </span>
+      : null;
+
     return (
       <div className='chat-footer'>
         <div className="input-group">
+          {menu}
           <input
             ref="messageInput"
             type="text"

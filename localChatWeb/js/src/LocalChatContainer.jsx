@@ -24,6 +24,7 @@ const LocalChatContainer = React.createClass({
       webViewURL: '',
       openWebView: false,
       webViewHeightRatio: '',
+      persistentMenu: [],
     }
   },
 
@@ -42,7 +43,6 @@ const LocalChatContainer = React.createClass({
   },
 
   render(): React.Element {
-    console.log(this.state);
     const messages = this.state.messages;
 
     const webView = this.state.openWebView
@@ -65,8 +65,10 @@ const LocalChatContainer = React.createClass({
             <LocalChatMessagesContent messages={messages}/>
             <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
             <div className="panel-footer">
-              <LocalChatFooter userID={this.state.userID}>
-              </LocalChatFooter>
+              <LocalChatFooter
+                userID={this.state.userID}
+                persistentMenu={this.state.persistentMenu}
+              />
             </div>
           </div>
         </div>
@@ -84,6 +86,13 @@ const LocalChatContainer = React.createClass({
 
     // set webview config
     this.setState(LocalChatStore.getWebViewState());
+
+    const menu = LocalChatStore.getPersistentMenu();
+    if (menu.length !== this.state.persistentMenu.length) {
+      this.setState({
+        persistentMenu: menu,
+      });
+    }
   },
 
   _loadWebview(url: string): void {

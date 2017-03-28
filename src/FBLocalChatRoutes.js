@@ -14,6 +14,10 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     res.json(ChatUtils.getLocalChatMessages());
   });
 
+  router.get('/localChat/persistentMenu', (req, res) => {
+    res.json(ChatUtils.getPersistentMenu());
+  });
+
   router.post('/localChat/sendMessage', (req, res) => {
     const senderID = req.body.senderID;
     const message = req.body.message;

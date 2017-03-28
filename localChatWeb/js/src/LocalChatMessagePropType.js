@@ -16,7 +16,6 @@ import {PropTypes} from 'react';
  */
 const TextMessagePropType = PropTypes.shape({
   text: PropTypes.string.isRequired,
-  fromUser: PropTypes.bool.isRequired,
 });
 
 const ImagePropType = PropTypes.shape({
@@ -29,7 +28,6 @@ const ImagePropType = PropTypes.shape({
 const ImageMessagePropType = PropTypes.shape({
   text: PropTypes.string,
   attachment: ImagePropType.isRequired,
-  fromUser: PropTypes.bool.isRequired,
 });
 
 /*
@@ -76,7 +74,6 @@ const ButtonsTemplateMessagePropType = PropTypes.shape({
       "buttons": PropTypes.arrayOf(ButtonPropType).isRequired,
     }).isRequired,
   }),
-  fromUser: PropTypes.bool.isRequired,
 });
 
 const QuickRepliesPropType = PropTypes.shape({
@@ -88,13 +85,11 @@ const QuickRepliesPropType = PropTypes.shape({
 const QuickReplyMessageWithTextPropType = PropTypes.shape({
   text: PropTypes.string.isRequired,
   quick_replies: PropTypes.arrayOf(QuickRepliesPropType),
-  fromUser: PropTypes.bool.isRequired,
 });
 
 const QuickReplyMessageWithImagePropType = PropTypes.shape({
   attachment: ImagePropType.isRequired,
   quick_replies: PropTypes.arrayOf(QuickRepliesPropType),
-  fromUser: PropTypes.bool.isRequired,
 });
 
 const LocalChatMessagePropType = PropTypes.oneOfType([
