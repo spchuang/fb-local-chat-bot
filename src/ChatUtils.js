@@ -26,6 +26,18 @@ function _saveMessageToLocalChat(
 }
 
 const ChatUtils = {
+  storePersistentMenu(token: string): Promise {
+    return rp({
+      uri: 'https://graph.facebook.com/v2.6/me/messenger_profile',
+      qs: {access_token: token},
+      method: 'POST',
+      body: {
+        persistent_menu: _persistentMenu,
+      },
+      json: true,
+    });
+  },
+
   send(
     recipientID: string,
     token: string,

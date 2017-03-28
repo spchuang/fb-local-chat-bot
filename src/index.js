@@ -166,6 +166,10 @@ class Bot extends EventEmitter {
     ChatUtils.setPersistentMenu(menuDefinition);
   }
 
+  storePersistentMenu(): Promise {
+    return ChatUtils.storePersistentMenu(this._token);
+  }
+
   sendText(recipientID: string, text: string): Promise {
     return this.send(recipientID, {text: text});
   }

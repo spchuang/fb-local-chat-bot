@@ -122,6 +122,18 @@ class LocalChatStore extends EventStore {
         console.log(res);
       });
   }
+
+  storePersistentMenu(): void {
+    const url = this._baseURL + '/localChat/storePersistentMenuWithFacebook';
+    $.post(url)
+      .done((res: Object) => {
+        alert("Successfully stored the menu!");
+      })
+      .fail((res: Object) => {
+        alert("Failed to store the menu: " + res.responseText);
+        console.log(res);
+      });
+  }
 }
 
 const store = new LocalChatStore();

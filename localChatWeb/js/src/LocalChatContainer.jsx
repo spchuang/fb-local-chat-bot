@@ -57,8 +57,7 @@ const LocalChatContainer = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <b>Local FB chat test (user ID: {this.state.userID})</b>
-            <LocalChatOptin userID={this.state.userID}>
-            </LocalChatOptin>
+            <LocalChatOptin userID={this.state.userID} />
           </div>
           <div className="chat-content-container">
             {webView}
@@ -72,6 +71,9 @@ const LocalChatContainer = React.createClass({
             </div>
           </div>
         </div>
+        <button className="btn btn-primary btn-sm" onClick={this._storePersistentMenu}>
+          Store persistent menu with Facebook
+        </button>
       </div>
     );
   },
@@ -107,7 +109,11 @@ const LocalChatContainer = React.createClass({
       webviewURL: '',
       hideWebview: true,
     });
-  }
+  },
+
+  _storePersistentMenu(): void {
+    LocalChatStore.storePersistentMenu();
+  },
 });
 
 module.exports = LocalChatContainer;

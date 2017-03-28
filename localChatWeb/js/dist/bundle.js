@@ -188,6 +188,11 @@
 	            })
 	          )
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { className: 'btn btn-primary btn-sm', onClick: this._storePersistentMenu },
+	        'Store persistent menu with Facebook'
 	      )
 	    );
 	  },
@@ -220,6 +225,9 @@
 	      webviewURL: '',
 	      hideWebview: true
 	    });
+	  },
+	  _storePersistentMenu: function _storePersistentMenu() {
+	    _LocalChatStore2.default.storePersistentMenu();
 	  }
 	});
 	
@@ -5774,6 +5782,17 @@
 	    value: function sendQuickReplyForUser(senderID, text, payload) {
 	      var url = this._baseURL + '/localChat/quickReply';
 	      _jquery2.default.post(url, { senderID: senderID, text: text, payload: payload }).fail(function (res) {
+	        console.log(res);
+	      });
+	    }
+	  }, {
+	    key: 'storePersistentMenu',
+	    value: function storePersistentMenu() {
+	      var url = this._baseURL + '/localChat/storePersistentMenuWithFacebook';
+	      _jquery2.default.post(url).done(function (res) {
+	        alert("Successfully stored the menu!");
+	      }).fail(function (res) {
+	        alert("Failed to store the menu: " + res.responseText);
 	        console.log(res);
 	      });
 	    }

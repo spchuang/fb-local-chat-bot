@@ -36,6 +36,17 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     res.sendStatus(200);
   });
 
+  router.post('/localChat/storePersistentMenuWithFacebook', (req, res) => {
+
+    Bot.storePersistentMenu()
+      .then((data: Object) => {
+        res.sendStatus(200);
+      })
+      .catch((data: Object) => {
+        res.status(data.statusCode).send(data.message);
+      });
+  });
+
   router.post('/localChat/optin/', (req, res) => {
     const senderID = req.body.senderID;
     const ref = req.body.ref;
