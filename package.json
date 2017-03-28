@@ -4,6 +4,7 @@
   "main": "index.js",
   "description": "A ES6 Node client for Messenger Bot designed for easy local testing",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "6.23.0",
     "dot": "1.0.3",
     "express": "4.13.4",
     "invariant": "2.2.1",

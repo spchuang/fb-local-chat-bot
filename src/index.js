@@ -142,7 +142,17 @@ class Bot extends EventEmitter {
     return ChatUtils.send(
       recipientID,
       this._token,
-      messageData,
+      {message: messageData},
+      this._useLocalChat,
+      this._useMessenger,
+    );
+  }
+
+  sendSenderAction(recipientID: string, action: SendActionType): Promise {
+    return ChatUtils.send(
+      recipientID,
+      this._token,
+      {sender_action: action},
       this._useLocalChat,
       this._useMessenger,
     );

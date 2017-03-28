@@ -14,6 +14,9 @@ export type MultimediaAttachment = {
   payload: Payload,
 };
 
+export type SendActionType =
+  'mark_seen' | 'typing_on' | 'typing_off';
+
 export type ButtonTemplateAttachment = {
   type: 'template',
   payload: {

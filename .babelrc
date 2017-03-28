@@ -5,6 +5,7 @@
     "syntax-trailing-function-commas",
     "transform-class-properties",
     "syntax-async-functions",
+    "transform-object-rest-spread",
     ["transform-async-to-module-method", {
       "module": "bluebird",
       "method": "coroutine"

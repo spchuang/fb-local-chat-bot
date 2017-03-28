@@ -12,6 +12,7 @@ const PostBackTypes = {
   TELL_RIDDLE: 'TELL_RIDDLE',
   MORE_BUTTONS: 'MORE_BUTTONS',
   SHOW_HSCROLL: 'SHOW_HSCROLL',
+  SEND_SENDER_ACTION_TYPING_ON: 'SEND_SENDER_ACTION_TYPING_ON',
 };
 const QuickReplyTypes = {
   TELL_JOKE: 'TELL_JOKE',
@@ -38,6 +39,7 @@ function makeServer() {
         Bot.createURLButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
         Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
         Bot.createPostbackButton('Show hscroll', PostBackTypes.SHOW_HSCROLL),
+        Bot.createPostbackButton('Show typing on action', PostBackTypes.SEND_SENDER_ACTION_TYPING_ON),
       ]
     );
   });
@@ -115,6 +117,9 @@ function makeServer() {
           senderID,
           elements
         );
+        break;
+      case PostBackTypes.SEND_SENDER_ACTION_TYPING_ON:
+        Bot.sendSenderAction(senderID, 'typing_on');
         break;
     }
   });

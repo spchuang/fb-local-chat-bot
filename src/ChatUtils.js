@@ -21,15 +21,16 @@ function _saveMessageToLocalChat(
 }
 
 const ChatUtils = {
+
   send(
     recipientID: string,
     token: string,
-    messageData: Object,
+    data: Object,
     useLocalChat: boolean,
     useMessenger: boolean,
   ): ?Promise {
     if (useLocalChat) {
-      _saveMessageToLocalChat(recipientID, Object.assign({}, messageData), false /* fromUser */);
+      _saveMessageToLocalChat(recipientID, Object.assign({}, data), false /* fromUser */);
     }
 
     if (useMessenger) {
@@ -39,7 +40,7 @@ const ChatUtils = {
         method: 'POST',
         body: {
           recipient: {id: recipientID},
-          message: messageData,
+          ...data,
         },
         json: true,
       }, function(err, response) {
@@ -62,7 +63,7 @@ const ChatUtils = {
   },
 
   saveSenderMessageToLocalChat(senderID: string, text: string): void {
-    _saveMessageToLocalChat(senderID, {text: text}, true /* fromUser */);
+    _saveMessageToLocalChat(senderID, {message: {text: text}}, true /* fromUser */);
   },
 };
 

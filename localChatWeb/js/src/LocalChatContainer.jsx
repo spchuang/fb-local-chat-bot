@@ -42,6 +42,7 @@ const LocalChatContainer = React.createClass({
   },
 
   render(): React.Element {
+    console.log(this.state);
     const messages = this.state.messages;
 
     const webView = this.state.openWebView

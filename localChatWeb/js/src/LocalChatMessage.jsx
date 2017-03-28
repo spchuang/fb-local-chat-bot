@@ -17,6 +17,7 @@ const HSCROLL_ELEMENT_WIDHT = 300;
 const LocalChatMessage = React.createClass({
   propTypes: {
     message: LocalChatMessagePropType.isRequired,
+    fromuser: PropTypes.bool.isRequired,
   },
 
   contextTypes: {
@@ -24,6 +25,7 @@ const LocalChatMessage = React.createClass({
   },
 
   render(): React.Element {
+    console.log(this.props);
     const message = this.props.message;
 
     let bubble = null;
@@ -52,7 +54,7 @@ const LocalChatMessage = React.createClass({
       <div>
         <span className={classNames(
           'message', {
-            'me': message.fromUser,
+            'me': this.props.fromUser,
             'message-bubble': useBubble,
           })}>
           {bubble}
