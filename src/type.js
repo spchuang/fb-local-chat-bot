@@ -17,6 +17,23 @@ export type MultimediaAttachment = {
 export type SendActionType =
   'mark_seen' | 'typing_on' | 'typing_off';
 
+export type PersistentMenu = {
+  locale: string,
+  composer_input_disabled: boolean,
+  call_to_actions: Array<PersistenMenuItem>,
+};
+
+export type NestedPersistentMenuItem = {
+  title: string,
+  type: 'nested',
+  call_to_actions: Array<PersistenMenuItem>,
+};
+
+export type PersistenMenuItem =
+  PostbackButton |
+  URLButton |
+  NestedPersistentMenuItem;
+
 export type ButtonTemplateAttachment = {
   type: 'template',
   payload: {

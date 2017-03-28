@@ -5,7 +5,12 @@
 import Promise from 'bluebird';
 import rp from 'request-promise';
 
+import type {
+  PersistentMenu,
+} from './type';
+
 let _userToMessagesMap = {};
+let _persistentMenu = [];
 
 function _saveMessageToLocalChat(
   recipientID: string,
@@ -21,7 +26,6 @@ function _saveMessageToLocalChat(
 }
 
 const ChatUtils = {
-
   send(
     recipientID: string,
     token: string,
@@ -64,6 +68,14 @@ const ChatUtils = {
 
   saveSenderMessageToLocalChat(senderID: string, text: string): void {
     _saveMessageToLocalChat(senderID, {message: {text: text}}, true /* fromUser */);
+  },
+
+  setPersistentMenu(persistentMenu: Array<PersistentMenu>): void {
+    this._persistentMenu = persistentMenu;
+  },
+
+  getPersistentMenu(): Array<PersistentMenu> {
+    return this._persistentMenu;
   },
 };
 

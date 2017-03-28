@@ -17,7 +17,7 @@ const HSCROLL_ELEMENT_WIDHT = 300;
 const LocalChatMessage = React.createClass({
   propTypes: {
     message: LocalChatMessagePropType.isRequired,
-    fromuser: PropTypes.bool.isRequired,
+    fromUser: PropTypes.bool.isRequired,
   },
 
   contextTypes: {

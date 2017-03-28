@@ -32555,7 +32555,7 @@
 	
 	  propTypes: {
 	    message: _LocalChatMessagePropType2.default.isRequired,
-	    fromuser: _react.PropTypes.bool.isRequired
+	    fromUser: _react.PropTypes.bool.isRequired
 	  },
 	
 	  contextTypes: {
@@ -33023,9 +33023,10 @@
 	var LocalChatWebview = _react2.default.createClass({
 	  displayName: 'LocalChatWebview',
 	
+	  _webviewIframe: null,
 	  propTypes: {
 	    webViewURL: _react.PropTypes.string.isRequired,
-	    webViewHeightRatio: _react.PropTypes.oneOf(['tall', 'compact', 'full'])
+	    webViewHeightRatio: _react.PropTypes.oneOf(['tall', 'compact', 'full']).isRequired
 	  },
 	
 	  render: function render() {

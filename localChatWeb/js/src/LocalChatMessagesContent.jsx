@@ -26,7 +26,7 @@ const LocalChatMessagesContent = React.createClass({
           key={index}
         />
       );
-    })
+    });
 
     // check for sender action for last message
     const lastMessage = this.props.messages[this.props.messages.length - 1];

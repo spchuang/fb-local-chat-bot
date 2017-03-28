@@ -28,6 +28,10 @@ import type {
   Button,
   Message,
   WebviewHeightRatio,
+  SendActionType,
+  PersistentMenu,
+  PersistenMenuItem,
+  NestedPersistentMenuItem,
 } from './type';
 
 class Bot extends EventEmitter {
@@ -158,6 +162,10 @@ class Bot extends EventEmitter {
     );
   }
 
+  setPersistentMenu(menuDefinition: Array<PersistentMenu>): void {
+    ChatUtils.setPersistentMenu(menuDefinition);
+  }
+
   sendText(recipientID: string, text: string): Promise {
     return this.send(recipientID, {text: text});
   }
@@ -242,6 +250,25 @@ class Bot extends EventEmitter {
       'quick_replies': quickReplyList,
     }
     return this.send(recipientID, messageData);
+  }
+
+  /*
+   * Helpers to create persistent menu
+   */
+  createPersistentMenu(locale: string, composerInputDisabled: boolean, menuItems: Array<PersistenMenuItem>): PersistentMenu {
+    return {
+      locale: locale,
+      composer_input_disabled: composerInputDisabled,
+      call_to_actions: menuItems,
+    };
+  }
+
+  createNestedMenuItem(title: string, menuItems: Array<PersistenMenuItem>): NestedPersistentMenuItem {
+    return {
+      title: title,
+      type: 'nested',
+      call_to_actions: menuItems,
+    };
   }
 
   /*

@@ -10,9 +10,10 @@ import LocalChatStore from './LocalChatStore.js';
 import classNames from 'classNames';
 
 const LocalChatWebview = React.createClass({
+  _webviewIframe: null,
   propTypes: {
     webViewURL: PropTypes.string.isRequired,
-    webViewHeightRatio: PropTypes.oneOf(['tall', 'compact', 'full']),
+    webViewHeightRatio: PropTypes.oneOf(['tall', 'compact', 'full']).isRequired,
   },
 
   render(): React.Element {
