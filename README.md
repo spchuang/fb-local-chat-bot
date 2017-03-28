@@ -10,6 +10,8 @@ fb-local-chat-bot is
 # Demo
 ![](https://github.com/spchuang/fb-local-chat-bot/blob/master/screenshot.gif)
 
+![](https://github.com/spchuang/fb-local-chat-bot/blob/master/screenshot2.png)
+
 ## Install
 ```
 npm install fb-local-chat-bot
@@ -109,7 +111,12 @@ describe('Basic server test', function() {
 ```
 
 ## History
+- 0.1.4
+   - Add persistent menu support
+   - Add sender action
+- 0.1.3
+   - Add general template hscroll
 - 0.1.0
-   - add `useMessenger` param
-   - add QuickReply, ListTemplate, GenericTemplate and various buttons
+   - Add `useMessenger` param
+   - Add QuickReply, ListTemplate, GenericTemplate and various buttons
    - Add profile fetching API
