@@ -155,6 +155,9 @@
 	      webViewHeightRatio: this.state.webViewHeightRatio
 	    }) : null;
 	
+	    var lastMessageObj = messages[messages.length - 1];
+	    var lastMessage = lastMessageObj && lastMessageObj.message;
+	
 	    return _react2.default.createElement(
 	      'div',
 	      { className: 'fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3' },
@@ -178,7 +181,7 @@
 	          { className: 'chat-content-container' },
 	          webView,
 	          _react2.default.createElement(_LocalChatMessagesContent2.default, { messages: messages }),
-	          _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { message: messages[messages.length - 1] }),
+	          _react2.default.createElement(_LocalChatMessagesQuickReply2.default, { message: lastMessage }),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'panel-footer' },

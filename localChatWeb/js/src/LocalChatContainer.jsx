@@ -52,6 +52,9 @@ const LocalChatContainer = React.createClass({
         />
       : null;
 
+    const lastMessageObj = messages[messages.length - 1];
+    const lastMessage = lastMessageObj && lastMessageObj.message;
+
     return (
       <div className='fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3'>
         <div className="panel panel-default">
@@ -62,7 +65,7 @@ const LocalChatContainer = React.createClass({
           <div className="chat-content-container">
             {webView}
             <LocalChatMessagesContent messages={messages}/>
-            <LocalChatMessagesQuickReply message={messages[messages.length - 1]}/>
+            <LocalChatMessagesQuickReply message={lastMessage}/>
             <div className="panel-footer">
               <LocalChatFooter
                 userID={this.state.userID}
