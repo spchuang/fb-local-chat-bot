@@ -83,11 +83,11 @@ const ChatUtils = {
   },
 
   setPersistentMenu(persistentMenu: Array<PersistentMenu>): void {
-    this._persistentMenu = persistentMenu;
+    _persistentMenu = persistentMenu;
   },
 
   getPersistentMenu(): Array<PersistentMenu> {
-    return this._persistentMenu;
+    return _persistentMenu;
   },
 };
 
