@@ -55,6 +55,12 @@ const LocalChatContainer = React.createClass({
     const lastMessageObj = messages[messages.length - 1];
     const lastMessage = lastMessageObj && lastMessageObj.message;
 
+    const saveMenuButton = this.state.persistentMenu.length > 0
+      ? <button className="btn btn-primary btn-sm" onClick={this._storePersistentMenu}>
+          Store persistent menu with Facebook
+        </button>
+      : null;
+
     return (
       <div className='fb-local-chat-container col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3'>
         <div className="panel panel-default">
@@ -74,9 +80,7 @@ const LocalChatContainer = React.createClass({
             </div>
           </div>
         </div>
-        <button className="btn btn-primary btn-sm" onClick={this._storePersistentMenu}>
-          Store persistent menu with Facebook
-        </button>
+        {saveMenuButton}
       </div>
     );
   },

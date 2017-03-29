@@ -130,3 +130,11 @@ body {
 .clear {
   clear: both;
 }
+
+.locale-dropdown hr {
+  margin: 5px 0;
+}
+
+.locale-dropdown .dropdown-button {
+  margin-left: 5px;
+}

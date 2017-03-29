@@ -5,7 +5,7 @@
 'use strict';
 
 import React, {PropTypes} from 'react';
-import {ButtonToolbar, OverlayTrigger, Popover} from 'react-bootstrap';
+import {ButtonToolbar, DropdownButton, MenuItem, OverlayTrigger, Popover} from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 import LocalChatStore from './LocalChatStore.js';
 
@@ -20,7 +20,7 @@ const LocalChatPersistentMenuButton = React.createClass({
 
   getInitialState(): Object {
     return {
-      menuIndex: 0, // TODO: support other language selection
+      menuIndex: 0,
       levels: [],
     };
   },
@@ -80,10 +80,41 @@ const LocalChatPersistentMenuButton = React.createClass({
     );
   },
 
-  renderMenu(): React.Element{
+  getLocaleDropDown(): ?React.Element {
+    const persistentMenu = this.props.persistentMenu;
+
+    if (persistentMenu.length === 1) {
+      return null;
+    }
+
+    const items = persistentMenu.map((menu, index) => {
+      return (
+        <MenuItem
+          key={index}
+          onClick={() => this.setState({menuIndex: index})}>
+          {menu.locale}
+        </MenuItem>
+      );
+    });
+    return (
+      <div className="locale-dropdown">
+        Locale:
+        <DropdownButton
+          title={persistentMenu[this.state.menuIndex].locale}
+          id="bg-nested-dropdown"
+          className="dropdown-button btn-sm">
+          {items}
+        </DropdownButton>
+        <hr/>
+      </div>
+    );
+  },
+
+  renderMenu(): React.Element {
     const menuItems = this.getMenuItem().map((item, index) => {
       return this.renderMenuItem(item, index);
     });
+
 
     const backButton = this.state.levels.length > 0
       ? <a href="#a" onClick={this._goBackOneLevel}>
@@ -94,6 +125,7 @@ const LocalChatPersistentMenuButton = React.createClass({
 
     return (
       <Popover id="popover-trigger-click" title={this.getTitle()}>
+        {this.getLocaleDropDown()}
         {backButton}
         <div className="list-group">
           {menuItems}

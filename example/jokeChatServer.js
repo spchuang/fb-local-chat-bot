@@ -44,22 +44,26 @@ function makeServer() {
     );
   });
 
+  const menuItems = [
+    Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
+    Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES),
+    Bot.createURLButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
+    Bot.createNestedMenuItem('more', [
+      Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
+      Bot.createPostbackButton('Show hscroll', PostBackTypes.SHOW_HSCROLL),
+      Bot.createNestedMenuItem('Even more stuff', [
+        Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
+        Bot.createPostbackButton('Show hscroll', PostBackTypes.SHOW_HSCROLL),
+        Bot.createPostbackButton('Show typing on action', PostBackTypes.SEND_SENDER_ACTION_TYPING_ON),
+      ]),
+    ]),
+  ];
+
   Bot.setPersistentMenu(
     [
-      Bot.createPersistentMenu('default', false, [
-        Bot.createPostbackButton('Tell me a joke', PostBackTypes.TELL_JOKE),
-        Bot.createPostbackButton('Show list of jokes', PostBackTypes.LIST_JOKES),
-        Bot.createURLButton('Open website for jokes', 'http://jokes.cc.com/', 'tall'),
-        Bot.createNestedMenuItem('more', [
-          Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
-          Bot.createPostbackButton('Show hscroll', PostBackTypes.SHOW_HSCROLL),
-          Bot.createNestedMenuItem('Even more stuff', [
-            Bot.createPostbackButton('More buttons', PostBackTypes.MORE_BUTTONS),
-            Bot.createPostbackButton('Show hscroll', PostBackTypes.SHOW_HSCROLL),
-            Bot.createPostbackButton('Show typing on action', PostBackTypes.SEND_SENDER_ACTION_TYPING_ON),
-          ]),
-        ]),
-      ]),
+      Bot.createPersistentMenu('default', false, menuItems),
+      Bot.createPersistentMenu('cn', false, menuItems),
+      Bot.createPersistentMenu('jp', false, menuItems),
     ]
   );
 
