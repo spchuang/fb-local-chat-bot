@@ -1,3 +1,5 @@
+[NOTE] this is not actively maintaiend anymore. If there are issues or changes to Facebook's API, this repo may not work properly.
+
 # fb-local-chat-bot
 
 Testing your Messenger Bot apps is a pain in the ass - you need to setup ngrok to tunnel to your server (what happens when multiple people work on it?) and writing unit tests are not intuitive.
